@@ -35,7 +35,7 @@ async function createFood({food_name, price, establishment_id, created_by}) {
 }
 
 async function getFoodByEstablishment({establishment_name}) {
-    const QUERY = `SELECT * FROM FOOD f LEFT JOIN ESTABLISHMENT e ON e.establishment_id as C WHERE C.establishment_name LIKE '%%'`;
+    const QUERY = "SELECT * FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE '%?%'";
 
     try {
         const result = await POOL.query(
