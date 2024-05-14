@@ -1,4 +1,4 @@
-import { createFood } from "../food/food_controller.js";
+import { createFood, getFoodByEstablishment } from "../food/food_controller.js";
 
 const createFoodAPI = async (req, res) => {
     // console.log(req.body);
@@ -13,6 +13,20 @@ const createFoodAPI = async (req, res) => {
     res.send(response);
 }
 
+const getFoodByEstablishmentAPI = async (req, res) => {
+    // console.log(req.body);
+    const getFoodByEstablishment_result = await getFoodByEstablishment(req.body);
+
+    const response = {
+        "success": getFoodByEstablishment_result.success,
+        "data": getFoodByEstablishment_result.data,
+        "message": getFoodByEstablishment_result.message
+    }
+    
+    res.send(response);
+}
+
 export {
-    createFoodAPI
+    createFoodAPI,
+    getFoodByEstablishmentAPI
 }

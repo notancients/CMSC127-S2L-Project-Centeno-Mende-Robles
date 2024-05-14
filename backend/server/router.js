@@ -1,6 +1,6 @@
 import express from "express";
 import POOL from "./pool.js";
-import { createFoodAPI } from "../api/food_api_controller.js";
+import { createFoodAPI, getFoodByEstablishmentAPI } from "../api/food_api_controller.js";
 
 
 
@@ -15,5 +15,6 @@ router.get("/", (req, res) => {
 });
 
 router.post("/food/create-food", createFoodAPI);
+router.get("/food/get-food-by-establishment", getFoodByEstablishmentAPI);
 
 export default router;
