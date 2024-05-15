@@ -1,6 +1,7 @@
 import { createFood } from "../food/food_controller.js";
 
 const createFoodAPI = async (req, res) => {
+    // console.log(req.body);
     const createFood_result = await createFood(req.body);
 
     const response = {

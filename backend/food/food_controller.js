@@ -6,22 +6,24 @@
 import POOL from '../server/pool.js';
 
 async function createFood({food_name, price, establishment_id, created_by}) {
-    const QUERY = "INSERT INTO FOOD(food_name, price, establishment_id) VALUES (?, ?, ?, ?)";
+    const QUERY = "INSERT INTO FOOD(food_name, price, establishment_id) VALUES (?, ?, ?)";
     try {
-        const result = POOL.query(
+        const result = await POOL.query(
             QUERY,
             [food_name, price, establishment_id,created_by]
         );
 
         let success_message = {
             "success": true,
-            "data": [],
-            "message": "Successfully added a food entry: ."
+            "data": result,
+            "message": `Successfully added a food entry: ${food_name}.`
         };
         
         return success_message;
 
     } catch (e) {
+        console.log(e);
+
         let failure_message = {
             "success": false,
             "data": [],
