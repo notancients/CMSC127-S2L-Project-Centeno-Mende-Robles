@@ -29,7 +29,8 @@ async function createEstablishment({establishment_name, establishment_location, 
 async function searchEstablishment({establishment_name}) {
     console.log("Searching for an establishment.");
     
-    let establisment_name_param = `%${establishment_name}%`
+    const establisment_name_param = `%${establishment_name}%`
+
     try {
         const QUERY = "SELECT * FROM ESTABLISHMENT WHERE establishment_name LIKE ?";
         let searched_establishment = await POOL.query(
@@ -55,9 +56,31 @@ async function searchEstablishment({establishment_name}) {
     }
 }
 
-async function updateEstablishment({establishment_name}) {
+async function updateEstablishment({establishment_id, establishment_name, establishment_location, operating_hours}) {
     console.log("Updating an establishment.");
 
+    try {
+        const QUERY = "UPDATE ESTABLISHMENT SET establishment_name=?, establishment_location=?, operating_hours=? WHERE establishment_id=?";
+        let updated_establishment = await POOL.query(
+            QUERY,
+            [establishment_name, establishment_location, operating_hours, establishment_id]
+        );
+        
+
+        return {
+            "success":true,
+            "data": updated_establishment[0],
+            "message": "An establishment has been successfully updated."
+        }
+
+    } catch (err) {
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with updating an establishment."
+        }
+    }
 }
 
 async function deleteEstablishment({establishment_name}) {

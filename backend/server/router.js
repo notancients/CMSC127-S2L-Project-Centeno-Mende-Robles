@@ -3,11 +3,16 @@ import { createFoodAPI } from "./food_api_controller.js";
 
 import {
     createEstablishmentAPI,
-    searchEstablishmentAPI
+    deleteEstablishmentAPI,
+    searchEstablishmentAPI,
+    updateEstablishmentAPI
 } from "./establishment_api_controller.js"
 
 import { createUserAPI } from "./user_api_controller.js";
-import { populateEstablishmentsAPI, populateUsersAPI } from "../sample_data/populate_database.js";
+import { 
+    populateEstablishmentsAPI, 
+    populateUsersAPI 
+} from "../sample_data/populate_database.js";
 
 
 
@@ -33,6 +38,8 @@ router.post("/api/create-user", createUserAPI);
 // ESTABLISHMENT API
 router.post("/api/create-establishment", createEstablishmentAPI);
 router.get("/api/search-establishment", searchEstablishmentAPI);
+router.patch("/api/update-establishment", updateEstablishmentAPI);
+router.delete("/api/delete-establishment", deleteEstablishmentAPI);
 
 // FOOD API
 router.post("/food/create-food", createFoodAPI);

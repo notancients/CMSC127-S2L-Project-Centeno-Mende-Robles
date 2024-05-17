@@ -38,7 +38,7 @@ async function searchEstablishmentAPI(req, res) {
 async function updateEstablishmentAPI(req, res) {
     console.log("Create establishment API has been called.");
 
-    const createEstablishment_result = await updateEstablishment(req.body);
+    const updateEstablishment_result = await updateEstablishment(req.body);
 
     if(updateEstablishment_result.success) {
         res.status(200).json(updateEstablishment_result);
