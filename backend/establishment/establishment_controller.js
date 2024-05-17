@@ -26,6 +26,46 @@ async function createEstablishment({establishment_name, establishment_location, 
     }
 }
 
+async function searchEstablishment({establishment_name}) {
+    console.log("Searching for an establishment.");
+
+    try {
+        const QUERY = "SELECT * FROM ESTABLISHMENT WHERE establishment_name LIKE '%?%'";
+        let searched_establishment = await POOL.query(
+            QUERY,
+            [establishment_name]
+        );
+
+        return {
+            "success":true,
+            "data": searched_establishment,
+            "message": "An establishment has been successfully found."
+        }
+
+    } catch (err) {
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with searching an establishment."
+        }
+    }
+}
+
+async function updateEstablishment({establishment_name}) {
+    console.log("Updating an establishment.");
+
+}
+
+async function deleteEstablishment({establishment_name}) {
+    console.log("Deleting an establishment.");
+
+    return false
+}
+
 export {
-    createEstablishment
+    createEstablishment,
+    searchEstablishment,
+    updateEstablishment,
+    deleteEstablishment
 }

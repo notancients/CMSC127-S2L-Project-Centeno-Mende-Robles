@@ -6,7 +6,7 @@ import {
 } from "./establishment_api_controller.js"
 
 import { createUserAPI } from "./user_api_controller.js";
-import { populateUsersAPI } from "../sample_data/populate_database.js";
+import { populateEstablishmentsAPI, populateUsersAPI } from "../sample_data/populate_database.js";
 
 
 
@@ -20,8 +20,12 @@ router.get("/", (req, res) => {
     });
 });
 
-// USER API
+// DATA POPULATION
 router.get("/api/populate-users", populateUsersAPI);
+router.get("/api/populate-establishments", populateEstablishmentsAPI);
+
+// USER API
+
 
 router.post("/api/create-user", createUserAPI);
 
