@@ -1,10 +1,11 @@
 import express from "express";
-import POOL from "./pool.js";
 import { createFoodAPI } from "./food_api_controller.js";
 
 import {
     createEstablishmentAPI
 } from "./establishment_api_controller.js"
+
+import { createUserAPI } from "./user_api_controller.js";
 
 
 
@@ -17,6 +18,9 @@ router.get("/", (req, res) => {
         "message": "Welcome to the homepage."
     });
 });
+
+// USER API
+router.post("/api/create-user", createUserAPI);
 
 // ESTABLISHMENT API
 router.post("/api/create-establishment", createEstablishmentAPI);
