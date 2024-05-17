@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS USER (
 	first_name VARCHAR(50) NOT NULL, 
 	last_name VARCHAR(50) NOT NULL,
 	username VARCHAR(50) UNIQUE NOT NULL, -- needs to have unique username
-	user_password VARCHAR(50) NOT NULL, -- password is a reserved keyword 
+	user_password VARBINARY(255) NOT NULL, -- password is a reserved keyword 
 	user_type VARCHAR(50) DEFAULT 'regular', -- regular, admin, owner (establishment owner)
 	CONSTRAINT pk_user PRIMARY KEY (user_id)
 	-- CONSTRAINT one_user UNIQUE (first_name, last_name)

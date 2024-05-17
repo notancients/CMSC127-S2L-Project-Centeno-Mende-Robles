@@ -1,4 +1,4 @@
-import POOL from "../server/pool.js";
+import { POOL } from "../server/pool.js";
 
 async function createEstablishment({establishment_name, establishment_location, operating_hours, established_by}) {
     console.log("Creating an establishment.");
