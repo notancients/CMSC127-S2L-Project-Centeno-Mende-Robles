@@ -6,6 +6,7 @@ import {
 } from "./establishment_api_controller.js"
 
 import { createUserAPI } from "./user_api_controller.js";
+import { populateUsersAPI } from "../sample_data/populate_database.js";
 
 
 
@@ -20,6 +21,8 @@ router.get("/", (req, res) => {
 });
 
 // USER API
+router.get("/api/populate-users", populateUsersAPI);
+
 router.post("/api/create-user", createUserAPI);
 
 // ESTABLISHMENT API
