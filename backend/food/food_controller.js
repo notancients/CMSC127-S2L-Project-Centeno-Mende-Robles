@@ -3,15 +3,8 @@
 // View all food items from an establishment arranged according to price;
 // 8. Search food items from any establishment based on a given price range and/or food type.
 
-<<<<<<< HEAD
-import POOL from '../server/pool.js';
-import { arrayIntoTupleParameter } from './food_controller_utility.js';
-
-
-
-=======
 import { POOL } from '../server/pool.js';
->>>>>>> backend/establishment
+import { arrayIntoTupleParameter } from './food_controller_utility.js';
 
 async function createFood({food_name, price, establishment_id, created_by}) {
     const QUERY = "INSERT INTO FOOD(food_name, price, establishment_id) VALUES (?, ?, ?)";
@@ -37,6 +30,66 @@ async function createFood({food_name, price, establishment_id, created_by}) {
             "success": false,
             "data": [e],
             "message": "There was an error with adding a food entry."
+        };
+        return failure_message;
+    }
+}
+
+
+
+
+async function editFood({food_id, food_name, price, establishment_name}) {
+    const QUERY = "SELECT * FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE '%?%'";
+
+    try {
+        const result = await POOL.query(
+            QUERY,
+            [establishment_name]
+        )
+        
+        let success_message = {
+            "success": true,
+            "data": result[0],
+            "message": `Successfully found food entries for: ${establishment_name}.`
+        };
+        
+        return success_message;
+
+    } catch (e) {
+        let failure_message = {
+            "success": false,
+            "data": result,
+            "message": `There was an error getting food entries for: ${establishment_name}.`
+        };
+        return failure_message;
+    }
+}
+
+
+
+
+async function deleteFood({food_id}) {
+    const QUERY = "DELETE FROM FOOD WHERE food_id=?";
+
+    try {
+        const result = await POOL.query(
+            QUERY,
+            [food_id]
+        )
+        
+        let success_message = {
+            "success": true,
+            "data": result[0],
+            "message": `Successfully deleted a food entry.`
+        };
+        
+        return success_message;
+
+    } catch (e) {
+        let failure_message = {
+            "success": false,
+            "data": result,
+            "message": `There was an error deleting a food entry.`
         };
         return failure_message;
     }
@@ -133,66 +186,6 @@ async function getFoodByCategory({category_array}) {
         return failure_message;
     }
 }
-
-
-
-async function editFood({food_id, food_name, price, establishment_name}) {
-    const QUERY = "SELECT * FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE '%?%'";
-
-    try {
-        const result = await POOL.query(
-            QUERY,
-            [establishment_name]
-        )
-        
-        let success_message = {
-            "success": true,
-            "data": result[0],
-            "message": `Successfully found food entries for: ${establishment_name}.`
-        };
-        
-        return success_message;
-
-    } catch (e) {
-        let failure_message = {
-            "success": false,
-            "data": result,
-            "message": `There was an error getting food entries for: ${establishment_name}.`
-        };
-        return failure_message;
-    }
-}
-
-
-
-
-async function deleteFood({food_id}) {
-    const QUERY = "DELETE FROM FOOD WHERE food_id=?";
-
-    try {
-        const result = await POOL.query(
-            QUERY,
-            [food_id]
-        )
-        
-        let success_message = {
-            "success": true,
-            "data": result[0],
-            "message": `Successfully deleted a food entry.`
-        };
-        
-        return success_message;
-
-    } catch (e) {
-        let failure_message = {
-            "success": false,
-            "data": result,
-            "message": `There was an error deleting a food entry.`
-        };
-        return failure_message;
-    }
-}
-
 
 
 

@@ -15,7 +15,12 @@ import {
     populateUsersAPI 
 } from "../sample_data/populate_database.js";
 
-
+import {
+    createFoodAPI,
+    deleteFoodAPI,
+    updateFoodAPI,
+    getFoodByEstablishmentAPI
+} from "../food/food_controller.js";
 
 
 const router = express.Router();
@@ -45,6 +50,8 @@ router.delete("/api/delete-establishment", deleteEstablishmentAPI);
 
 // FOOD API
 router.post("/food/create-food", createFoodAPI);
+router.delete("/api/delete-food", deleteFoodAPI);
+router.patch("/api/update-food", updateFoodAPI);
 router.get("/food/get-food-by-establishment", getFoodByEstablishmentAPI);
 
 
