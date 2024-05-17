@@ -1,6 +1,5 @@
 import express from "express";
 
-import { createFoodAPI } from "./food_api_controller.js";
 
 import {
     createEstablishmentAPI,
@@ -20,7 +19,7 @@ import {
     deleteFoodAPI,
     updateFoodAPI,
     getFoodByEstablishmentAPI
-} from "../food/food_controller.js";
+} from "./food_api_controller.js";
 
 
 const router = express.Router();
@@ -49,7 +48,7 @@ router.patch("/api/update-establishment", updateEstablishmentAPI);
 router.delete("/api/delete-establishment", deleteEstablishmentAPI);
 
 // FOOD API
-router.post("/food/create-food", createFoodAPI);
+router.post("/api/create-food", createFoodAPI);
 router.delete("/api/delete-food", deleteFoodAPI);
 router.patch("/api/update-food", updateFoodAPI);
 router.get("/food/get-food-by-establishment", getFoodByEstablishmentAPI);

@@ -6,33 +6,96 @@
 import { POOL } from '../server/pool.js';
 import { arrayIntoTupleParameter } from './food_controller_utility.js';
 
-async function createFood({food_name, price, establishment_id, created_by}) {
-    const QUERY = "INSERT INTO FOOD(food_name, price, establishment_id) VALUES (?, ?, ?)";
+async function createFood({food_name, price, establishment_id, image_url, ingredients, category}) {
     
+    let food_table_result;
+
+
+    console.log("Inserting food into main table.");
     try {
-        const result = await POOL.query(
-            QUERY,
-            [food_name, price, establishment_id,created_by]
+        const FOOD_QUERY = "INSERT INTO FOOD(food_name, price, establishment_id) VALUES (?, ?, ?)";
+        let created_food = await POOL.query(
+            FOOD_QUERY,
+            [food_name, price, establishment_id]
         );
 
-        let success_message = {
-            "success": true,
-            "data": result[0],
-            "message": `Successfully added a food entry: ${food_name}.`
-        };
-        
-        return success_message;
+        food_table_result = created_food;
 
-    } catch (e) {
-        console.log(e);
-
-        let failure_message = {
+    } catch (err) {
+        console.log(["There was an error:", err]);
+        return {
             "success": false,
-            "data": [e],
-            "message": "There was an error with adding a food entry."
-        };
-        return failure_message;
+            "data": err,
+            "message": "There was an error with creating a food."
+        }
     }
+
+
+
+    console.log("Inserting food image.");
+    try {
+        const IMAGE_QUERY = "INSERT INTO FOOD_IMAGE(food_id, link) VALUES (?, ?)";
+        let created_food_image = await POOL.query(
+            IMAGE_QUERY,
+            [food_table_result[0].insertId, image_url]
+        );           
+
+    } catch (err) {
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with inserting an image for the food."
+        }
+    }
+
+
+
+    console.log("Inserting food ingredients.");
+    ingredients.forEach(async (element) => {
+        // console.log(element);
+        try {
+            const INGREDIENT_QUERY = "INSERT INTO FOOD_INGREDIENTS(food_id, ingredients) VALUES (?, ?)";
+            let created_food_ingredient = await POOL.query(
+                INGREDIENT_QUERY,
+                [food_table_result[0].insertId, element]
+            );           
+    
+        } catch (err) {
+            console.log(["There was an error:", err]);
+            return {
+                "success": false,
+                "data": err,
+                "message": "There was an error with inserting an ingredient for the food."
+            }
+        }
+    });
+
+    console.log("Inserting food category.");
+    category.forEach(async (element) => {
+        // console.log(element);
+        try {
+            const CATEGORY_QUERY = "INSERT INTO FOOD_CATEGORY(food_id, food_category) VALUES (?, ?)";
+            let created_food_ingredient = await POOL.query(
+                CATEGORY_QUERY,
+                [food_table_result[0].insertId, element]
+            );           
+    
+        } catch (err) {
+            console.log(["There was an error:", err]);
+            return {
+                "success": false,
+                "data": err,
+                "message": "There was an error with inserting a category for the food."
+            }
+        }
+    });
+
+    return {
+        "success": true,
+        "data": food_table_result,
+        "message": "Successfulyl inserted a food."
+    };
 }
 
 

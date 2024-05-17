@@ -8,14 +8,12 @@ import {
 const createFoodAPI = async (req, res) => {
     // console.log(req.body);
     const createFood_result = await createFood(req.body);
-
-    const response = {
-        "success": createFood_result.success,
-        "data": createFood_result.data,
-        "message": createFood_result.message
+    console.log(createFood_result);
+    if(createFood_result.success) {
+        res.status(200).json(createFood_result);
+    } else {
+        res.status(500).json(createFood_result);
     }
-    
-    res.send(response);
 }
 
 async function updateFoodAPI(req, res) {
