@@ -10,11 +10,11 @@ async function createUser({first_name, last_name, username, user_password}) {
         // const HASH_QUERY = `AES_ENCRYPT(?, '${KEY}')`
         // const HASHED_PASSWORD = await POOL.query(`SELECT CONCAT(AES_ENCRYPT(?, '${ENCRYPTION_KEY}'))`, [user_password]);
         // console.log(HASHED_PASSWORD, "\n","\n");
-        const QUERY = "INSERT INTO USER(first_name, last_name, username, user_password) VALUES(?, ?, ?, AES_ENCRYPT(?, ?))";
+        const QUERY = "INSERT INTO USER(first_name, last_name, username, user_password) VALUES(?, ?, ?, AES_ENCRYPT(?, 'key'))";
 
         const created_user = await POOL.query(
             QUERY,
-            [first_name, last_name, username, user_password, ENCRYPTION_KEY]
+            [first_name, last_name, username, user_password]
         );
 
         return {
