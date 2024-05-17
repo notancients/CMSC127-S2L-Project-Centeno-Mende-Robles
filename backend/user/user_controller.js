@@ -9,9 +9,22 @@ async function createUser({first_name, last_name, username, user_password}) {
     try {
         // const HASH_QUERY = `AES_ENCRYPT(?, '${KEY}')`
         // const HASHED_PASSWORD = await POOL.query(`SELECT CONCAT(AES_ENCRYPT(?, '${ENCRYPTION_KEY}'))`, [user_password]);
-        // console.log(HASHED_PASSWORD, "\n","\n");
-        const QUERY = "INSERT INTO USER(first_name, last_name, username, user_password) VALUES(?, ?, ?, AES_ENCRYPT(?, 'key'))";
+        
+        const existing_user = await POOL.query(
+            "SELECT COUNT(*) AS count FROM USER WHERE username=?",
+            [username]
+        ); 
+        const existing_count = existing_user[0][0].count;
+        if (existing_user.count != 0) {
+            return {
+                "success": false,
+                "data": "Exists already",
+                "message": "A user exists with that username already."
+            }
+        }
 
+        const QUERY = "INSERT INTO USER(first_name, last_name, username, user_password) VALUES(?, ?, ?, AES_ENCRYPT(?, 'key'))";
+        // console.log(HASHED_PASSWORD, "\n","\n");
         const created_user = await POOL.query(
             QUERY,
             [first_name, last_name, username, user_password]
@@ -32,6 +45,8 @@ async function createUser({first_name, last_name, username, user_password}) {
         }
     }
 }
+
+
 
 export {
     createUser
