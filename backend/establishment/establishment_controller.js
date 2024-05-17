@@ -83,8 +83,31 @@ async function updateEstablishment({establishment_id, establishment_name, establ
     }
 }
 
-async function deleteEstablishment({establishment_name}) {
+async function deleteEstablishment({establishment_id}) {
     console.log("Deleting an establishment.");
+
+    try {
+        const QUERY = "DELETE FROM ESTABLISHMENT WHERE establishment_id=?";
+        let deleted_establishment = await POOL.query(
+            QUERY,
+            [establishment_id]
+        );
+        
+
+        return {
+            "success":true,
+            "data": deleted_establishment[0],
+            "message": "An establishment has been successfully deleted."
+        }
+
+    } catch (err) {
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with deleting an establishment."
+        }
+    }
 
     return false
 }
