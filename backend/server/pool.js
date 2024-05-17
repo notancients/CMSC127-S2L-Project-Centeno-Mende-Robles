@@ -7,6 +7,7 @@ const SQL_HOST = process.env.SQL_HOST;
 const SQL_USER = process.env.SQL_USER;
 const SQL_PASSWORD = process.env.SQL_PASSWORD;
 const SQL_DATABASE = process.env.SQL_DATABASE;
+const KEY = process.env.HASH_KEY;
 
 console.log(SQL_DATABASE, SQL_HOST, SQL_PASSWORD,SQL_USER);
 
@@ -19,4 +20,7 @@ const POOL = mysql.createPool({
 }).promise();
 console.log("Pool has been created.");
 
-export default POOL;
+export {
+    POOL,
+    KEY
+}

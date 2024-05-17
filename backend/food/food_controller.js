@@ -3,11 +3,15 @@
 // View all food items from an establishment arranged according to price;
 // 8. Search food items from any establishment based on a given price range and/or food type.
 
+<<<<<<< HEAD
 import POOL from '../server/pool.js';
 import { arrayIntoTupleParameter } from './food_controller_utility.js';
 
 
 
+=======
+import { POOL } from '../server/pool.js';
+>>>>>>> backend/establishment
 
 async function createFood({food_name, price, establishment_id, created_by}) {
     const QUERY = "INSERT INTO FOOD(food_name, price, establishment_id) VALUES (?, ?, ?)";

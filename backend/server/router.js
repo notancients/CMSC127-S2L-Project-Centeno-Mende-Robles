@@ -1,6 +1,20 @@
 import express from "express";
-import POOL from "./pool.js";
-import { createFoodAPI, getFoodByEstablishmentAPI } from "../api/food_api_controller.js";
+
+import { createFoodAPI } from "./food_api_controller.js";
+
+import {
+    createEstablishmentAPI,
+    deleteEstablishmentAPI,
+    searchEstablishmentAPI,
+    updateEstablishmentAPI
+} from "./establishment_api_controller.js"
+
+import { createUserAPI } from "./user_api_controller.js";
+import { 
+    populateEstablishmentsAPI, 
+    populateUsersAPI 
+} from "../sample_data/populate_database.js";
+
 
 
 
@@ -14,7 +28,24 @@ router.get("/", (req, res) => {
     });
 });
 
+// DATA POPULATION
+router.get("/api/populate-users", populateUsersAPI);
+router.get("/api/populate-establishments", populateEstablishmentsAPI);
+
+// USER API
+
+
+router.post("/api/create-user", createUserAPI);
+
+// ESTABLISHMENT API
+router.post("/api/create-establishment", createEstablishmentAPI);
+router.get("/api/search-establishment", searchEstablishmentAPI);
+router.patch("/api/update-establishment", updateEstablishmentAPI);
+router.delete("/api/delete-establishment", deleteEstablishmentAPI);
+
+// FOOD API
 router.post("/food/create-food", createFoodAPI);
 router.get("/food/get-food-by-establishment", getFoodByEstablishmentAPI);
+
 
 export default router;
