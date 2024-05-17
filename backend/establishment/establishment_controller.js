@@ -28,17 +28,20 @@ async function createEstablishment({establishment_name, establishment_location, 
 
 async function searchEstablishment({establishment_name}) {
     console.log("Searching for an establishment.");
-
+    
+    let establisment_name_param = `%${establishment_name}%`
     try {
-        const QUERY = "SELECT * FROM ESTABLISHMENT WHERE establishment_name LIKE '%?%'";
+        const QUERY = "SELECT * FROM ESTABLISHMENT WHERE establishment_name LIKE ?";
         let searched_establishment = await POOL.query(
             QUERY,
-            [establishment_name]
+            [establisment_name_param]
         );
+        
+        // console.log(searched_establishment);
 
         return {
             "success":true,
-            "data": searched_establishment,
+            "data": searched_establishment[0],
             "message": "An establishment has been successfully found."
         }
 

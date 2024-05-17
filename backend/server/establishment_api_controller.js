@@ -23,8 +23,9 @@ async function createEstablishmentAPI(req, res) {
 
 async function searchEstablishmentAPI(req, res) {
     console.log("Search establishment API has been called.");
+    console.log(req.query);
 
-    const searchEstablishment_result = await searchEstablishment(req.body);
+    const searchEstablishment_result = await searchEstablishment(req.query);
 
     if(searchEstablishment_result.success) {
         res.status(200).json(searchEstablishment_result);
@@ -61,5 +62,8 @@ async function deleteEstablishmentAPI(req, res) {
 }
 
 export {
-    createEstablishmentAPI
+    createEstablishmentAPI,
+    searchEstablishmentAPI,
+    updateEstablishmentAPI,
+    deleteEstablishmentAPI
 }

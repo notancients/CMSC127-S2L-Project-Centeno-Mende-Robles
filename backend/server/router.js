@@ -2,7 +2,8 @@ import express from "express";
 import { createFoodAPI } from "./food_api_controller.js";
 
 import {
-    createEstablishmentAPI
+    createEstablishmentAPI,
+    searchEstablishmentAPI
 } from "./establishment_api_controller.js"
 
 import { createUserAPI } from "./user_api_controller.js";
@@ -31,9 +32,10 @@ router.post("/api/create-user", createUserAPI);
 
 // ESTABLISHMENT API
 router.post("/api/create-establishment", createEstablishmentAPI);
-
+router.get("/api/search-establishment", searchEstablishmentAPI);
 
 // FOOD API
 router.post("/food/create-food", createFoodAPI);
+
 
 export default router;
