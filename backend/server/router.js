@@ -54,4 +54,9 @@ router.patch("/api/update-food", updateFoodAPI);
 router.get("/food/get-food-by-establishment", getFoodByEstablishmentAPI);
 
 
+// REVIEW API
+router.post("/api/create-review", createReviewAPI);
+router.patch("/api/update-review", updateReviewAPI);
+router.delete("/api/delete-review", deleteReviewAPI);
+
 export default router;
