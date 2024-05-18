@@ -5,7 +5,8 @@ import {
     createEstablishmentAPI,
     deleteEstablishmentAPI,
     searchEstablishmentAPI,
-    updateEstablishmentAPI
+    updateEstablishmentAPI,
+    viewAllEstablishmentAPI
 } from "./establishment_api_controller.js"
 
 import { createUserAPI } from "./user_api_controller.js";
@@ -27,6 +28,7 @@ import {
     createReviewAPI,
     deleteReviewAPI,
     updateReviewAPI
+
 } from "./review_api_controller.js";
 
 const router = express.Router();
@@ -53,6 +55,7 @@ router.post("/api/create-establishment", createEstablishmentAPI);
 router.get("/api/search-establishment", searchEstablishmentAPI);
 router.patch("/api/update-establishment", updateEstablishmentAPI);
 router.delete("/api/delete-establishment", deleteEstablishmentAPI);
+router.get("/api/view-all-establishment", viewAllEstablishmentAPI);
 
 // FOOD API
 router.post("/api/create-food", createFoodAPI);

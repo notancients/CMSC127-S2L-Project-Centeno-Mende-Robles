@@ -112,9 +112,40 @@ async function deleteEstablishment({establishment_id}) {
     return false
 }
 
+// To add pagination for proper data handling, currently simply returning all data
+// May 18, 6:32PM
+async function viewAllEstablishment() {
+    console.log("Viewing all establishments.");
+    
+    try {
+        const VIEWALL_QUERY = "SELECT * FROM ESTABLISHMENT";
+        const all_establishments = await POOL.query(
+            VIEWALL_QUERY,
+            []
+        );
+        
+
+        return {
+            "success":true,
+            "data": all_establishments,
+            "message": "Successfully returned all establishments."
+        }
+
+    } catch (err) {
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with retrieving the establishments."
+        }
+    }
+}
+
+
 export {
     createEstablishment,
     searchEstablishment,
     updateEstablishment,
-    deleteEstablishment
+    deleteEstablishment,
+    viewAllEstablishment
 }

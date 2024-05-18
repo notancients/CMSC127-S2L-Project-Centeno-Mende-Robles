@@ -2,7 +2,8 @@ import {
     createEstablishment,
     searchEstablishment,
     updateEstablishment,
-    deleteEstablishment
+    deleteEstablishment,
+    viewAllEstablishment
 } from "../establishment/establishment_controller.js";
 
 
@@ -61,9 +62,23 @@ async function deleteEstablishmentAPI(req, res) {
     
 }
 
+async function viewAllEstablishmentAPI(req, res) {
+    console.log("View all establishment API has been called.");
+
+    const viewAllEstablishment_result = await viewAllEstablishment();
+
+    if(viewAllEstablishment_result.success) {
+        res.status(200).json(viewAllEstablishment_result);
+    } else {
+        res.status(500).json(viewAllEstablishment_result);
+    }
+    
+}
+
 export {
     createEstablishmentAPI,
     searchEstablishmentAPI,
     updateEstablishmentAPI,
-    deleteEstablishmentAPI
+    deleteEstablishmentAPI,
+    viewAllEstablishmentAPI
 }
