@@ -70,11 +70,9 @@ CREATE TABLE IF NOT EXISTS  REVIEW (
 	post_content TEXT, -- users not required to have content  
 	user_id INT, 
 
-	review_type integer NOT NULL, -- food or establishment
+	review_type integer NOT NULL, -- food or establishment -- 0 == FOOD, 1==ESTABLISHMENT
 
 	target_id integer NOT NULL, 
 	CONSTRAINT pk_review PRIMARY KEY (review_id),
-	CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES USER (user_id),
-	CONSTRAINT fk_target_establishment FOREIGN KEY (target_id) REFERENCES ESTABLISHMENT (establishment_id) ON DELETE CASCADE,
-    CONSTRAINT fk_target_food FOREIGN KEY (target_id) REFERENCES FOOD (food_id) ON DELETE CASCADE
+	CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES USER (user_id)
 );

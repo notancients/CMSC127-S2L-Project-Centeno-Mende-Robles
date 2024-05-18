@@ -9,6 +9,7 @@ import {
 } from "./establishment_api_controller.js"
 
 import { createUserAPI } from "./user_api_controller.js";
+
 import { 
     populateEstablishmentsAPI, 
     populateUsersAPI 
@@ -21,6 +22,12 @@ import {
     getFoodByEstablishmentAPI
 } from "./food_api_controller.js";
 
+
+import {
+    createReviewAPI,
+    deleteReviewAPI,
+    updateReviewAPI
+} from "./review_api_controller.js";
 
 const router = express.Router();
 
