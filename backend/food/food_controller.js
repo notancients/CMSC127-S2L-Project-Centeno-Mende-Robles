@@ -6,6 +6,89 @@
 import { POOL } from '../server/pool.js';
 import { arrayIntoTupleParameter } from './food_controller_utility.js';
 
+async function insertImage(food_id, image_url) {
+    console.log("Inserting food image.");
+    image_url.forEach(async (element) => {
+        try {
+            const IMAGE_QUERY = "INSERT INTO FOOD_IMAGE(food_id, link) VALUES (?, ?)";
+            let created_food_image = await POOL.query(
+                IMAGE_QUERY,
+                [food_id, image_url]
+            );           
+    
+        } catch (err) {
+            console.log(["There was an error:", err]);
+            return {
+                "success": false,
+                "data": err,
+                "message": "There was an error with inserting an image for the food."
+            }
+        }
+    });
+
+    return {
+        "success": true,
+        "data": null,
+        "message": "Successfully inserted all images for the food."
+    }
+}
+
+async function insertIngredients(food_id, ingredients) {
+    console.log("Inserting food ingredients.");
+    ingredients.forEach(async (element) => {
+        // console.log(element);
+        try {
+            const INGREDIENT_QUERY = "INSERT INTO FOOD_INGREDIENTS(food_id, ingredients) VALUES (?, ?)";
+            let created_food_ingredient = await POOL.query(
+                INGREDIENT_QUERY,
+                [food_id, element]
+            );           
+    
+        } catch (err) {
+            console.log(["There was an error:", err]);
+            return {
+                "success": false,
+                "data": err,
+                "message": "There was an error with inserting an ingredient for the food."
+            }
+        }
+    });
+
+    return {
+        "success": true,
+        "data": null,
+        "message": "Successfully inserted all ingredients for the food."
+    }
+}
+
+async function insertCategory(food_id, category) {
+    console.log("Inserting food category.");
+    category.forEach(async (element) => {
+        // console.log(element);
+        try {
+            const CATEGORY_QUERY = "INSERT INTO FOOD_CATEGORY(food_id, food_category) VALUES (?, ?)";
+            let created_food_ingredient = await POOL.query(
+                CATEGORY_QUERY,
+                [food_id, element]
+            );           
+    
+        } catch (err) {
+            console.log(["There was an error:", err]);
+            return {
+                "success": false,
+                "data": err,
+                "message": "There was an error with inserting a category for the food."
+            }
+        }
+    });
+
+    return {
+        "success": true,
+        "data": null,
+        "message": "Successfully inserted all categories for the food."
+    }
+}
+
 async function createFood({food_name, price, establishment_id, image_url, ingredients, category}) {
     
     let food_table_result;
@@ -30,101 +113,151 @@ async function createFood({food_name, price, establishment_id, image_url, ingred
         }
     }
 
+    const food_id = food_table_result[0].insertId;
 
+    // Insert image
+    const image_result = await insertImage(food_id, image_url);
+    if(!image_result.success) { return image_result; }
 
-    console.log("Inserting food image.");
-    try {
-        const IMAGE_QUERY = "INSERT INTO FOOD_IMAGE(food_id, link) VALUES (?, ?)";
-        let created_food_image = await POOL.query(
-            IMAGE_QUERY,
-            [food_table_result[0].insertId, image_url]
-        );           
+    const ingredient_result = await insertIngredients(food_id, ingredients);
+    if(!ingredient_result.success) { return ingredient_result; }
 
-    } catch (err) {
-        console.log(["There was an error:", err]);
-        return {
-            "success": false,
-            "data": err,
-            "message": "There was an error with inserting an image for the food."
-        }
-    }
-
-
-
-    console.log("Inserting food ingredients.");
-    ingredients.forEach(async (element) => {
-        // console.log(element);
-        try {
-            const INGREDIENT_QUERY = "INSERT INTO FOOD_INGREDIENTS(food_id, ingredients) VALUES (?, ?)";
-            let created_food_ingredient = await POOL.query(
-                INGREDIENT_QUERY,
-                [food_table_result[0].insertId, element]
-            );           
-    
-        } catch (err) {
-            console.log(["There was an error:", err]);
-            return {
-                "success": false,
-                "data": err,
-                "message": "There was an error with inserting an ingredient for the food."
-            }
-        }
-    });
-
-    console.log("Inserting food category.");
-    category.forEach(async (element) => {
-        // console.log(element);
-        try {
-            const CATEGORY_QUERY = "INSERT INTO FOOD_CATEGORY(food_id, food_category) VALUES (?, ?)";
-            let created_food_ingredient = await POOL.query(
-                CATEGORY_QUERY,
-                [food_table_result[0].insertId, element]
-            );           
-    
-        } catch (err) {
-            console.log(["There was an error:", err]);
-            return {
-                "success": false,
-                "data": err,
-                "message": "There was an error with inserting a category for the food."
-            }
-        }
-    });
+    const category_result = await insertCategory(food_id, category);
+    if(!category_result.success) { return category_result; }
 
     return {
         "success": true,
         "data": food_table_result,
-        "message": "Successfulyl inserted a food."
+        "message": "Successfully inserted a food."
     };
 }
 
 
 
-
-async function editFood({food_id, food_name, price, establishment_name}) {
-    const QUERY = "SELECT * FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE '%?%'";
-
+async function deleteImage(food_id) {
+    // Delete related images
     try {
-        const result = await POOL.query(
-            QUERY,
-            [establishment_name]
+        const UPDATE_DELETE_IMAGE_QUERY = "DELETE FROM FOOD_IMAGE WHERE food_id=?";
+        const deleted_food_image = await POOL.query(
+            UPDATE_DELETE_IMAGE_QUERY,
+            [food_id]
         )
-        
-        let success_message = {
-            "success": true,
-            "data": result[0],
-            "message": `Successfully found food entries for: ${establishment_name}.`
-        };
-        
-        return success_message;
 
-    } catch (e) {
-        let failure_message = {
+        return {
+            "success": true,
+            "data": deleted_food_image,
+            "message": "Successfully deleted image."
+        }
+
+    } catch(err) {
+        console.log(["There was an error:", err]);
+        return {
             "success": false,
-            "data": result,
-            "message": `There was an error getting food entries for: ${establishment_name}.`
-        };
-        return failure_message;
+            "data": err,
+            "message": "There was an error with deleting a food image for update."
+        }
+    }
+}
+
+async function deleteIngredient(food_id) {
+    // Delete related ingredients 
+    try {
+        const UPDATE_DELETE_INGREDIENT_QUERY = "DELETE FROM FOOD_INGREDIENTS WHERE food_id=?";
+        const deleted_food_ingredient = await POOL.query(
+            UPDATE_DELETE_INGREDIENT_QUERY,
+            [food_id]
+        )
+
+        return {
+            "success": true,
+            "data": deleted_food_ingredient,
+            "message": "Successfully deleted ingrdients."
+        }
+
+    } catch(err) {
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with deleting a food ingredient for update."
+        }
+    }
+}
+
+async function deleteCategory(food_id) {
+    // Delete related category
+    try {
+        const UPDATE_DELETE_CATEGORY_QUERY = "DELETE FROM FOOD_CATEGORY WHERE food_id=?";
+        const deleted_food_ingredient = await POOL.query(
+            UPDATE_DELETE_CATEGORY_QUERY,
+            [food_id]
+        )
+
+        return {
+            "success": true,
+            "data": deleted_food_ingredient,
+            "message": "Successfully deleted category."
+        }
+
+    } catch(err) {
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with deleting a food category for update."
+        }
+    }
+}
+
+
+async function editFood({food_id, food_name, price, establishment_id, image_url, ingredients, category}) {
+    console.log("Updating food details.");
+
+    // Delete all entries on the reference tables
+
+    const deleted_image = await deleteImage(food_id);
+    if (!deleted_image.success) { return deleted_image};
+
+    const deleted_ingredient = await deleteIngredient(food_id);
+    if (!deleted_ingredient.success) { return deleted_ingredient};
+
+    const deleted_category = await deleteCategory(food_id);
+    if (!deleted_category.success) { return deleted_category};
+
+
+
+    // This part is the actual update
+    try {
+        const UPDATE_FOOD_QUERY = "UPDATE FOOD SET food_name=?, price=? WHERE food_id=?"
+        const food_update = await POOL.query(
+            UPDATE_FOOD_QUERY,
+            [food_name, price, food_id]
+        )
+
+        const image_result = await insertImage(food_id, image_url);
+        if(!image_result.success) { return image_result; }
+
+        const ingredient_result = await insertIngredients(food_id, ingredients);
+        if(!ingredient_result.success) { return ingredient_result; }
+
+        const category_result = await insertCategory(food_id, category);
+        if(!category_result.success) { return category_result; }
+
+        return {
+            "success": true,
+            "data": food_update,
+            "message": "Successfully updated food details."
+        }
+
+    } catch (err) {
+
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with updating a food."
+        }
+
     }
 }
 
