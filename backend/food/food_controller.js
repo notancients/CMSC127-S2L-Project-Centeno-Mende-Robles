@@ -265,29 +265,38 @@ async function editFood({food_id, food_name, price, establishment_id, image_url,
 
 
 async function deleteFood({food_id}) {
-    const QUERY = "DELETE FROM FOOD WHERE food_id=?";
+    console.log("Deleting a food entry.");
+
+    const deleted_image = await deleteImage(food_id);
+    if (!deleted_image.success) { return deleted_image};
+
+    const deleted_ingredient = await deleteIngredient(food_id);
+    if (!deleted_ingredient.success) { return deleted_ingredient};
+
+    const deleted_category = await deleteCategory(food_id);
+    if (!deleted_category.success) { return deleted_category};
 
     try {
-        const result = await POOL.query(
-            QUERY,
+        const DELETE_FOOD_QUERY = "DELETE FROM FOOD WHERE food_id=?";
+
+        const deleted_food = await POOL.query(
+            DELETE_FOOD_QUERY,
             [food_id]
         )
         
-        let success_message = {
+        return {
             "success": true,
-            "data": result[0],
+            "data": deleted_food,
             "message": `Successfully deleted a food entry.`
-        };
-        
-        return success_message;
+        }
 
-    } catch (e) {
-        let failure_message = {
+    } catch (err) {
+        console.log(["There was an error: ", err]);
+        return {
             "success": false,
-            "data": result,
+            "data": err,
             "message": `There was an error deleting a food entry.`
-        };
-        return failure_message;
+        }
     }
 }
 
