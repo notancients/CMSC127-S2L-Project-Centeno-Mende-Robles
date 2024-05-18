@@ -4,7 +4,6 @@
 // 8. Search food items from any establishment based on a given price range and/or food type.
 
 import { POOL } from '../server/pool.js';
-import { arrayIntoTupleParameter } from './food_controller_utility.js';
 
 async function insertImage(food_id, image_url) {
     console.log("Inserting food image.");
@@ -304,29 +303,26 @@ async function deleteFood({food_id}) {
 
 
 async function getFoodByEstablishment({establishment_name}) {
-    const QUERY = "SELECT * FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE '%?%'";
+    const QUERY = "SELECT * FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE ?";
 
     try {
-        const result = await POOL.query(
+        const foodByEstablishment = await POOL.query(
             QUERY,
-            [establishment_name]
+            [`%${establishment_name}%`]
         )
         
-        let success_message = {
+        return {
             "success": true,
-            "data": result[0],
+            "data": foodByEstablishment,
             "message": `Successfully found food entries for: ${establishment_name}.`
         };
-        
-        return success_message;
 
-    } catch (e) {
-        let failure_message = {
+    } catch (err) { 
+        return failure_message = {
             "success": false,
-            "data": result,
+            "data": err,
             "message": `There was an error getting food entries for: ${establishment_name}.`
         };
-        return failure_message;
     }
 }
 

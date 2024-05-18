@@ -19,7 +19,9 @@ import {
     createFoodAPI,
     deleteFoodAPI,
     updateFoodAPI,
-    getFoodByEstablishmentAPI
+    getFoodByEstablishmentAPI,
+    getFoodByTypeAPI,
+    getFoodByPriceAPI
 } from "./food_api_controller.js";
 
 
@@ -58,7 +60,10 @@ router.delete("/api/delete-establishment", deleteEstablishmentAPI);
 router.post("/api/create-food", createFoodAPI);
 router.delete("/api/delete-food", deleteFoodAPI);
 router.patch("/api/update-food", updateFoodAPI);
-router.get("/food/get-food-by-establishment", getFoodByEstablishmentAPI);
+router.get("/api/get-food-by-establishment", getFoodByEstablishmentAPI);
+router.get("/api/get-food-by-type", getFoodByTypeAPI);
+router.get("/api/get-food-by-price", getFoodByPriceAPI);
+
 
 
 // REVIEW API
