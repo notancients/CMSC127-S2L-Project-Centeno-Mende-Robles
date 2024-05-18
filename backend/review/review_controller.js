@@ -50,8 +50,31 @@ async function createReview({rating, post_content, user_id, review_type, target_
     }
 }
 
-async function updateReview() {
+async function updateReview({review_id, rating, post_content}) {
+    console.log("Updating a review.");
+    
+    try {
+        const UPDATE_REVIEW_QUERY = "UPDATE REVIEW SET rating=?, post_content=? WHERE review_id=?";
+        
+        const updated_review = await POOL.query(
+            UPDATE_REVIEW_QUERY,
+            [rating, post_content, review_id]
+        );
 
+        return {
+            "success": true,
+            "data": updated_review,
+            "message": "Successfully updated a review."
+        };
+
+    } catch (err) {
+        console.log("There was an error:", err);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error in updating a review."
+        };
+    }
 }
 
 async function deleteReview() {
