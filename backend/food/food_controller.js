@@ -331,8 +331,39 @@ async function getCategory(food_id) {
     return category;
 }
 
+async function getFoodById(food_id) {
+    console.log("Retrieving food by id.");
+
+    try {
+        const FOOD_BY_ID_QUERY = "SELECT * FROM FOOD WHERE food_id=?";
+        
+        const foodById = await POOL.query(
+            FOOD_BY_ID_QUERY,
+            [food_id]
+        );
+        
+        let completeFoodDetails = foodById[0][0];
+        completeFoodDetails["images"] = await getImages(food_id);
+        completeFoodDetails["ingredients"] = await getIngredients(food_id);
+        completeFoodDetails["category"] = await getCategory(food_id);
+
+        return {
+            "success": true,
+            "data": completeFoodDetails,
+            "message": `Successfully found food entries for the given id.`
+        };
+    } catch (err) {
+        console.log("There was an error: ", err);
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error getting food the given id.`
+        };
+    }
+}
+
 async function getFoodByEstablishment({establishment_name}) {
-    const QUERY = "SELECT * FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE ?";
+    const QUERY = "SELECT food_id FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE ?";
 
     try {
         const foodByEstablishment = await POOL.query(
@@ -348,9 +379,7 @@ async function getFoodByEstablishment({establishment_name}) {
             for (let i = 0; i<completeFoodDetails.length; i++) {
                 let food_id = completeFoodDetails[i].food_id;
 
-                completeFoodDetails[i]["images"] = await getImages(food_id);
-                completeFoodDetails[i]["ingredients"] = await getIngredients(food_id);
-                completeFoodDetails[i]["category"] = await getCategory(food_id);
+                completeFoodDetails[i] = (await getFoodById(food_id))["data"];
             }
         } catch(err) {
             console.log(err);
@@ -378,19 +407,35 @@ async function getFoodByEstablishment({establishment_name}) {
 
 
 
-async function getFoodByCategory({category, establishment_id}) {
+async function getFoodByCategory({category, establishment_name}) {
 
-    let list_parameter = arrayIntoTupleParameter(category);
     let qn_mark_placeholder = category.map(() => '?').join(', '); // create the appropriate amount of qn mark place holerds
     
-
-    const QUERY = `SELECT * FROM (FOOD NATURAL JOIN FOOD_CATEGORY) WHERE establishment_id=? AND food_category IN (${qn_mark_placeholder})`;
+    const QUERY = `SELECT DISTINCT food_id from (FOOD f NATURAL JOIN ESTABLISHMENT e) NATURAL JOIN FOOD_CATEGORY WHERE establishment_name LIKE ? AND \`food_category\` IN (${qn_mark_placeholder})`;
     try {
         const foodByCategory = await POOL.query(
             QUERY,
-            [establishment_id ,...category]
+            [`%${establishment_name}%` ,...category]
         );
         
+        let completeFoodDetails = foodByCategory[0];
+
+        try {
+            for (let i = 0; i<completeFoodDetails.length; i++) {
+                let food_id = completeFoodDetails[i].food_id;
+
+                completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+            }
+        } catch(err) {
+            console.log(err);
+            return {
+                "success": false,
+                "data": err,
+                "message": `There was an error retrieving the related details.`
+            };
+        }
+
+
         return {
             "success": true,
             "data": foodByCategory[0],
