@@ -132,12 +132,40 @@ async function viewReviews({review_type, target_id}){
             "data": err,
             "message": `There was an error retrieving a review.`
         }
-        
+
     }
 }
 
-async function viewReviewsByDate() {
+async function viewReviewsByDate({review_type, target_id}) {
+console.log("Viewing reviews by date.");
 
+
+    try {
+        const VIEW_REVIEWS_DATE_QUERY = "SELECT * FROM REVIEW WHERE review_type=? AND target_id=? AND DATEDIFF(NOW(), date_published)<=30";
+
+        const viewReviewsDateResult = (await POOL.query(
+            VIEW_REVIEWS_DATE_QUERY,
+            [review_type, target_id]
+        ))[0];
+
+        console.log(viewReviewsDateResult);
+
+        return {
+            "success": true,
+            "data": viewReviewsDateResult,
+            "message": "Successfully retrieved all reviews."
+        }
+
+    } catch (err) {
+
+        console.log(["There was an error: ", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error retrieving a review.`
+        }
+        
+    }
 }
 
 export {
