@@ -4,6 +4,7 @@
 // 8. Search food items from any establishment based on a given price range and/or food type.
 
 import { POOL } from '../server/pool.js';
+import { arrayIntoTupleParameter } from './food_controller_utility.js';
 
 async function insertImage(food_id, image_url) {
     console.log("Inserting food image.");
@@ -328,6 +329,36 @@ async function getFoodByEstablishment({establishment_name}) {
 
 
 
+async function getFoodByCategory({category, establishment_id}) {
+
+    let list_parameter = arrayIntoTupleParameter(category);
+    let qn_mark_placeholder = category.map(() => '?').join(', '); // create the appropriate amount of qn mark place holerds
+    
+
+    const QUERY = `SELECT * FROM (FOOD NATURAL JOIN FOOD_CATEGORY) WHERE establishment_id=? AND food_category IN (${qn_mark_placeholder})`;
+    try {
+        const foodByCategory = await POOL.query(
+            QUERY,
+            [establishment_id ,...category]
+        );
+        
+        return {
+            "success": true,
+            "data": foodByCategory[0],
+            "message": `Successfully found food entries for: ${category}.`
+        };
+
+    } catch (err) {
+        let failure_message = {
+            "success": false,
+            "data": err,
+            "message": `There was an error getting food entries for the category(ies): ${category}.`
+        };
+        return failure_message;
+    }
+}
+
+
 
 async function getFoodByPriceRange({establishment_name, min_price, max_price}) {
     const QUERY = "SELECT * FROM FOOD WHERE price BETWEEN ? AND ?";
@@ -359,41 +390,12 @@ async function getFoodByPriceRange({establishment_name, min_price, max_price}) {
 
 
 
-async function getFoodByCategory({category_array}) {
-    const QUERY = "SELECT * FROM (FOOD NATURAL JOIN FOOD_CATEGORY) WHERE food_category IN ?"
-
-    let list_parameter = arrayIntoTupleParameter(category_array);
-
-    try {
-        const result = await POOL.query(
-            QUERY,
-            [list_parameter]
-        )
-        
-        let success_message = {
-            "success": true,
-            "data": result[0],
-            "message": `Successfully found food entries for: ${establishment_name}.`
-        };
-        
-        return success_message;
-
-    } catch (e) {
-        let failure_message = {
-            "success": false,
-            "data": result,
-            "message": `There was an error getting food entries for: ${establishment_name}.`
-        };
-        return failure_message;
-    }
-}
-
-
 
 export {
     createFood,
     getFoodByEstablishment,
     getFoodByPriceRange,
     editFood,
-    deleteFood
+    deleteFood,
+    getFoodByCategory
 }

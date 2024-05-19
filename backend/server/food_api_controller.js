@@ -2,7 +2,8 @@ import {
     createFood, 
     deleteFood, 
     editFood, 
-    getFoodByEstablishment 
+    getFoodByEstablishment,
+    getFoodByCategory
 } from "../food/food_controller.js";
 
 const createFoodAPI = async (req, res) => {
@@ -54,9 +55,9 @@ const getFoodByEstablishmentAPI = async (req, res) => {
     res.send(response);
 }
 async function getFoodByTypeAPI (req, res) {
-    // console.log(req.body);
-    const getFoodByType_result = await getFoodByType(req.query);
+    console.log("Get food by type API has been called.");
 
+    const getFoodByType_result = await getFoodByCategory(req.body);
     if(getFoodByType_result.success) {
         res.status(200).json(getFoodByType_result);
     } else {
