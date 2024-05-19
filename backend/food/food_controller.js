@@ -408,8 +408,9 @@ async function getFoodByEstablishment({establishment_name}) {
 
 
 async function getFoodByCategory({category, establishment_name}) {
+    console.log("Getting food by category.");
 
-    let qn_mark_placeholder = category.map(() => '?').join(', '); // create the appropriate amount of qn mark place holerds
+    let qn_mark_placeholder = [...category].map(() => '?').join(', '); // create the appropriate amount of qn mark place holerds
     
     const QUERY = `SELECT DISTINCT food_id from (FOOD f NATURAL JOIN ESTABLISHMENT e) NATURAL JOIN FOOD_CATEGORY WHERE establishment_name LIKE ? AND \`food_category\` IN (${qn_mark_placeholder})`;
     try {
@@ -452,8 +453,6 @@ async function getFoodByCategory({category, establishment_name}) {
     }
 }
 
-
-
 async function getFoodByPriceRange({establishment_name, min_price, max_price}) {
     const QUERY = "SELECT food_id FROM FOOD NATURAL JOIN ESTABLISHMENT WHERE establishment_name LIKE ? AND price BETWEEN ? AND ?";
 
@@ -487,6 +486,110 @@ async function getFoodByPriceRange({establishment_name, min_price, max_price}) {
     }
 }
 
+async function getFoodByPriceRangeAndCategory({establishment_name, min_price, max_price, category}) {
+    let qn_mark_placeholder = (category ? [...category].map(() => '?').join(', ') : null); // create the appropriate amount of qn mark place holerds
+
+    let PRICE_CATEGORY_QUERY;
+    if(min_price==null || max_price==null) { // no price given
+        PRICE_CATEGORY_QUERY = `SELECT DISTINCT food_id from (FOOD f NATURAL JOIN ESTABLISHMENT e) NATURAL JOIN FOOD_CATEGORY WHERE \`food_category\` IN (${qn_mark_placeholder})`;
+
+        try {
+            const category_only = (await POOL.query(
+                PRICE_CATEGORY_QUERY,
+                [...category]
+            ));
+
+            let completeFoodDetails = category_only[0];
+
+            for (let i = 0; i<completeFoodDetails.length; i++) {
+                let food_id = completeFoodDetails[i].food_id;
+
+                completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+            }
+            return {
+                "success": true,
+                "data": completeFoodDetails,
+                "message": "Retrieved food by category only."
+            }
+
+        } catch(err) {
+            console.log(["There was an error: ", err]);
+            return {
+                "success": false,
+                "data": err,
+                "message": "There was an error retrieving by category."
+            }
+        }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    } else if (!category) { // no category given
+        PRICE_CATEGORY_QUERY = "SELECT food_id FROM FOOD NATURAL JOIN ESTABLISHMENT WHERE price BETWEEN ? AND ?";
+
+        try {
+            const price_only = (await POOL.query(
+                PRICE_CATEGORY_QUERY,
+                [min_price, max_price]
+            ));
+
+            let completeFoodDetails = price_only[0];
+
+            for (let i = 0; i<completeFoodDetails.length; i++) {
+                let food_id = completeFoodDetails[i].food_id;
+
+                completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+            }
+            return {
+                "success": true,
+                "data": completeFoodDetails,
+                "message": "Retrieved food by price only."
+            }
+            
+        } catch(err) {
+            console.log(["There was an error: ", err]);
+            return {
+                "success": false,
+                "data": err,
+                "message": "There was an error retrieving by price only."
+            }
+        }
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////}
+
+    // both are given
+
+    PRICE_CATEGORY_QUERY = `SELECT DISTINCT food_id FROM FOOD NATURAL JOIN FOOD_CATEGORY WHERE food_category in (${qn_mark_placeholder}) AND price between ? and ?`;
+    
+    try {
+        const price_category = await POOL.query(
+            PRICE_CATEGORY_QUERY,
+            [...category, min_price, max_price]
+        )
+        
+        let completeFoodDetails = price_category[0];
+        
+        for (let i = 0; i<completeFoodDetails.length; i++) {
+            let food_id = completeFoodDetails[i].food_id;
+
+            completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+        }
+        
+        return {
+            "success": true,
+            "data": completeFoodDetails,
+            "message": `Successfully found food entries for the given price range and category.`
+        };;
+
+    } catch (err) {
+        console.log(["There was an error: ", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error getting food entries for the given price range and category.`
+        };;
+    }
+
+    
+}
+
 
 
 
@@ -494,7 +597,7 @@ async function getFoodByPriceRange({establishment_name, min_price, max_price}) {
 export {
     createFood,
     getFoodByEstablishment,
-    getFoodByPriceRange,
+    getFoodByPriceRangeAndCategory,
     editFood,
     deleteFood,
     getFoodByCategory
