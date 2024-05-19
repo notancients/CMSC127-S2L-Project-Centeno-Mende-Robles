@@ -104,8 +104,46 @@ async function deleteReview({review_id}) {
     }
 }
 
+async function viewReviews({review_type, target_id}){
+    console.log("Viewing reviews.");
+
+
+    try {
+        const VIEW_REVIEWS_QUERY = "SELECT * FROM REVIEW WHERE review_type=? AND target_id=?";
+
+        const viewReviewsResult = (await POOL.query(
+            VIEW_REVIEWS_QUERY,
+            [review_type, target_id]
+        ))[0];
+
+        console.log(viewReviewsResult);
+
+        return {
+            "success": true,
+            "data": viewReviewsResult,
+            "message": "Successfully retrieved all reviews."
+        }
+
+    } catch (err) {
+
+        console.log(["There was an error: ", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error retrieving a review.`
+        }
+        
+    }
+}
+
+async function viewReviewsByDate() {
+
+}
+
 export {
     createReview,
     updateReview,
-    deleteReview
+    deleteReview,
+    viewReviews,
+    viewReviewsByDate
 }
