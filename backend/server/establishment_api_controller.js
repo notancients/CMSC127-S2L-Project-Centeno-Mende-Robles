@@ -3,7 +3,8 @@ import {
     searchEstablishment,
     updateEstablishment,
     deleteEstablishment,
-    viewAllEstablishment
+    viewAllEstablishment,
+    viewHighlyRatedEstablishment
 } from "../establishment/establishment_controller.js";
 
 
@@ -75,10 +76,23 @@ async function viewAllEstablishmentAPI(req, res) {
     
 }
 
+async function viewHighlyRatedEstablishmentAPI(req, res) {
+    console.log("View highly rated establishment API has been called.");
+
+    const viewHighlyRatedEstablishment_result = await viewHighlyRatedEstablishment();
+
+    if(viewHighlyRatedEstablishment_result.success) {
+        res.status(200).json(viewHighlyRatedEstablishment_result);
+    } else {
+        res.status(500).json(viewHighlyRatedEstablishment_result);
+    }
+}
+
 export {
     createEstablishmentAPI,
     searchEstablishmentAPI,
     updateEstablishmentAPI,
     deleteEstablishmentAPI,
-    viewAllEstablishmentAPI
+    viewAllEstablishmentAPI,
+    viewHighlyRatedEstablishmentAPI
 }

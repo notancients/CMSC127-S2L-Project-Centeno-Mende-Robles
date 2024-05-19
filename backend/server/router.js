@@ -6,7 +6,8 @@ import {
     deleteEstablishmentAPI,
     searchEstablishmentAPI,
     updateEstablishmentAPI,
-    viewAllEstablishmentAPI
+    viewAllEstablishmentAPI,
+    viewHighlyRatedEstablishmentAPI
 } from "./establishment_api_controller.js"
 
 import { createUserAPI } from "./user_api_controller.js";
@@ -63,6 +64,7 @@ router.get("/api/search-establishment", searchEstablishmentAPI);
 router.patch("/api/update-establishment", updateEstablishmentAPI);
 router.delete("/api/delete-establishment", deleteEstablishmentAPI);
 router.get("/api/view-all-establishment", viewAllEstablishmentAPI);
+router.get("/api/get-highly-rated-establishment", viewHighlyRatedEstablishmentAPI)
 
 // FOOD API
 router.post("/api/create-food", createFoodAPI);

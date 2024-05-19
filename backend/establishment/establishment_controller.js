@@ -141,11 +141,35 @@ async function viewAllEstablishment() {
     }
 }
 
+async function viewHighlyRatedEstablishment() {
+    console.log("Viewing all highly rated establishments.");
+
+    try {
+        const HIGH_RATE_QUERY = "SELECT e.*, sub.average AS rating FROM ESTABLISHMENT e NATURAL JOIN (SELECT target_id, AVG(rating) AS average FROM REVIEW WHERE review_type=1 GROUP BY target_id HAVING AVG(rating)>=4 ORDER BY target_id ASC) as sub";
+        const high_rate_result = (await POOL.query(
+            HIGH_RATE_QUERY
+        ))[0];
+
+        return {
+            "success":true,
+            "data": high_rate_result,
+            "message": "Successfully returned all highly rated establishments."
+        }
+    } catch (err) {
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with retrieving the highly rated establishments."
+        }
+    }
+}
 
 export {
     createEstablishment,
     searchEstablishment,
     updateEstablishment,
     deleteEstablishment,
-    viewAllEstablishment
+    viewAllEstablishment,
+    viewHighlyRatedEstablishment
 }
