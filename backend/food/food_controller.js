@@ -8,7 +8,7 @@ import { arrayIntoTupleParameter } from './food_controller_utility.js';
 
 async function insertImage(food_id, image_url) {
     console.log("Inserting food image.");
-    image_url.forEach(async (element) => {
+    [...image_url].forEach(async (element) => {
         try {
             const IMAGE_QUERY = "INSERT INTO FOOD_IMAGE(food_id, link) VALUES (?, ?)";
             let created_food_image = await POOL.query(
@@ -301,96 +301,193 @@ async function deleteFood({food_id}) {
 }
 
 
+async function getIngredients(food_id) {
+    const INGREDIENT_QUERY = "SELECT ingredients FROM FOOD_INGREDIENTS WHERE food_id=?";
+    const foodIngredient = await POOL.query(INGREDIENT_QUERY, [food_id]);
 
+    let ingredients = foodIngredient[0].map((element) => {
+        return(element["ingredients"]);
+    });
+    return ingredients;
+}
 
-async function getFoodByEstablishment({establishment_name}) {
-    const QUERY = "SELECT * FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE '%?%'";
+async function getImages(food_id) {
+    const IMAGE_QUERY = "SELECT link FROM FOOD_IMAGE WHERE food_id=?";
+    const foodImages = await POOL.query(IMAGE_QUERY, [food_id]);
+
+    let images = foodImages[0].map((element) => {
+        return(element["link"]);
+    });
+    return images;
+}
+
+async function getCategory(food_id) {
+    const CATEGORY_QUERY = "SELECT food_category FROM FOOD_CATEGORY WHERE food_id=?";
+    const foodCategory = await POOL.query(CATEGORY_QUERY, [food_id]);
+
+    let category = foodCategory[0].map((element) => {
+        return(element["food_category"]);
+    });
+    return category;
+}
+
+async function getFoodById(food_id) {
+    console.log("Retrieving food by id.");
 
     try {
-        const result = await POOL.query(
-            QUERY,
-            [establishment_name]
-        )
+        const FOOD_BY_ID_QUERY = "SELECT * FROM FOOD WHERE food_id=?";
         
-        let success_message = {
-            "success": true,
-            "data": result[0],
-            "message": `Successfully found food entries for: ${establishment_name}.`
-        };
+        const foodById = await POOL.query(
+            FOOD_BY_ID_QUERY,
+            [food_id]
+        );
         
-        return success_message;
+        let completeFoodDetails = foodById[0][0];
+        completeFoodDetails["images"] = await getImages(food_id);
+        completeFoodDetails["ingredients"] = await getIngredients(food_id);
+        completeFoodDetails["category"] = await getCategory(food_id);
 
-    } catch (e) {
-        let failure_message = {
-            "success": false,
-            "data": result,
-            "message": `There was an error getting food entries for: ${establishment_name}.`
+        return {
+            "success": true,
+            "data": completeFoodDetails,
+            "message": `Successfully found food entries for the given id.`
         };
-        return failure_message;
+    } catch (err) {
+        console.log("There was an error: ", err);
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error getting food the given id.`
+        };
     }
 }
 
+async function getFoodByEstablishment({establishment_name}) {
+    const QUERY = "SELECT food_id FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE ?";
+
+    try {
+        const foodByEstablishment = await POOL.query(
+            QUERY,
+            [`%${establishment_name}%`]
+        )
+        
+        let completeFoodDetails = foodByEstablishment[0];
+        // We need to combine the results of the foods with their corresponding
+        // related details
+
+        try {
+            for (let i = 0; i<completeFoodDetails.length; i++) {
+                let food_id = completeFoodDetails[i].food_id;
+
+                completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+            }
+        } catch(err) {
+            console.log(err);
+            return {
+                "success": false,
+                "data": err,
+                "message": `There was an error retrieving the related details.`
+            };
+        }
+        // console.log(completeFoodDetails);
+        return {
+            "success": true,
+            "data": completeFoodDetails,
+            "message": `Successfully found food entries for: ${establishment_name}.`
+        };
+
+    } catch (err) { 
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error getting food entries for: ${establishment_name}.`
+        };
+    }
+}
+
+
+
+async function getFoodByCategory({category, establishment_name}) {
+
+    let qn_mark_placeholder = category.map(() => '?').join(', '); // create the appropriate amount of qn mark place holerds
+    
+    const QUERY = `SELECT DISTINCT food_id from (FOOD f NATURAL JOIN ESTABLISHMENT e) NATURAL JOIN FOOD_CATEGORY WHERE establishment_name LIKE ? AND \`food_category\` IN (${qn_mark_placeholder})`;
+    try {
+        const foodByCategory = await POOL.query(
+            QUERY,
+            [`%${establishment_name}%` ,...category]
+        );
+        
+        let completeFoodDetails = foodByCategory[0];
+
+        try {
+            for (let i = 0; i<completeFoodDetails.length; i++) {
+                let food_id = completeFoodDetails[i].food_id;
+
+                completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+            }
+        } catch(err) {
+            console.log(err);
+            return {
+                "success": false,
+                "data": err,
+                "message": `There was an error retrieving the related details.`
+            };
+        }
+
+
+        return {
+            "success": true,
+            "data": foodByCategory[0],
+            "message": `Successfully found food entries for: ${category}.`
+        };
+
+    } catch (err) {
+        console.log("There was an error: ", err);
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error getting food entries for the category(ies): ${category}.`
+        };
+    }
+}
 
 
 
 async function getFoodByPriceRange({establishment_name, min_price, max_price}) {
-    const QUERY = "SELECT * FROM FOOD WHERE price BETWEEN ? AND ?";
+    const QUERY = "SELECT food_id FROM FOOD NATURAL JOIN ESTABLISHMENT WHERE establishment_name LIKE ? AND price BETWEEN ? AND ?";
 
     try {
-        const result = await POOL.query(
+        const foodByPriceRange = await POOL.query(
             QUERY,
-            [min_price, max_price]
+            [`%${establishment_name}%`, min_price, max_price]
         )
         
-        let success_message = {
-            "success": true,
-            "data": result[0],
-            "message": `Successfully found food entries for: ${establishment_name}.`
-        };
+        let completeFoodDetails = foodByPriceRange[0];
         
-        return success_message;
+        for (let i = 0; i<completeFoodDetails.length; i++) {
+            let food_id = completeFoodDetails[i].food_id;
+
+            completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+        }
+        
+        return {
+            "success": true,
+            "data": completeFoodDetails,
+            "message": `Successfully found food entries for the given price range.`
+        };;
 
     } catch (e) {
         let failure_message = {
             "success": false,
             "data": result,
-            "message": `There was an error getting food entries for: ${establishment_name}.`
+            "message": `There was an error getting food entries for the given price range.`
         };
         return failure_message;
     }
 }
 
 
-
-
-async function getFoodByCategory({category_array}) {
-    const QUERY = "SELECT * FROM (FOOD NATURAL JOIN FOOD_CATEGORY) WHERE food_category IN ?"
-
-    let list_parameter = arrayIntoTupleParameter(category_array);
-
-    try {
-        const result = await POOL.query(
-            QUERY,
-            [list_parameter]
-        )
-        
-        let success_message = {
-            "success": true,
-            "data": result[0],
-            "message": `Successfully found food entries for: ${establishment_name}.`
-        };
-        
-        return success_message;
-
-    } catch (e) {
-        let failure_message = {
-            "success": false,
-            "data": result,
-            "message": `There was an error getting food entries for: ${establishment_name}.`
-        };
-        return failure_message;
-    }
-}
 
 
 
@@ -399,5 +496,6 @@ export {
     getFoodByEstablishment,
     getFoodByPriceRange,
     editFood,
-    deleteFood
+    deleteFood,
+    getFoodByCategory
 }

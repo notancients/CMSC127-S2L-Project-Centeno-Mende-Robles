@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS  FOOD_CATEGORY (
 CREATE TABLE IF NOT EXISTS  REVIEW ( 
 	review_id INT AUTO_INCREMENT, -- automatically increment unique id    
 	rating DECIMAL(2, 1) NOT NULL, -- users required to have rating
-	data_published TIMESTAMP DEFAULT NOW(),     
+	date_published TIMESTAMP DEFAULT NOW(),     
 	post_content TEXT, -- users not required to have content  
 	user_id INT, 
 

@@ -2,7 +2,9 @@ import {
     createFood, 
     deleteFood, 
     editFood, 
-    getFoodByEstablishment 
+    getFoodByEstablishment,
+    getFoodByCategory,
+    getFoodByPriceRange
 } from "../food/food_controller.js";
 
 const createFoodAPI = async (req, res) => {
@@ -43,7 +45,30 @@ async function deleteFoodAPI(req, res) {
 
 const getFoodByEstablishmentAPI = async (req, res) => {
     // console.log(req.body);
-    const getFoodByEstablishment_result = await getFoodByEstablishment(req.body);
+    const getFoodByEstablishment_result = await getFoodByEstablishment(req.query);
+
+    const response = {
+        "success": getFoodByEstablishment_result.success,
+        "data": getFoodByEstablishment_result.data,
+        "message": getFoodByEstablishment_result.message
+    }
+    
+    res.send(response);
+}
+async function getFoodByTypeAPI (req, res) {
+    console.log("Get food by type API has been called.");
+
+    const getFoodByType_result = await getFoodByCategory(req.body);
+    if(getFoodByType_result.success) {
+        res.status(200).json(getFoodByType_result);
+    } else {
+        res.status(500).json(getFoodByType_result);
+    }
+}
+
+async function getFoodByPriceAPI(req, res) {
+    // console.log(req.body);
+    const getFoodByEstablishment_result = await getFoodByPriceRange(req.query);
 
     const response = {
         "success": getFoodByEstablishment_result.success,
@@ -58,5 +83,7 @@ export {
     createFoodAPI,
     updateFoodAPI,
     deleteFoodAPI,
-    getFoodByEstablishmentAPI
+    getFoodByEstablishmentAPI,
+    getFoodByTypeAPI,
+    getFoodByPriceAPI
 }

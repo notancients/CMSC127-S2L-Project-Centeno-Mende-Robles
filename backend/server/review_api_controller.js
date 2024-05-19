@@ -1,7 +1,9 @@
 import {
     createReview,
     updateReview,
-    deleteReview
+    deleteReview,
+    viewReviews,
+    viewReviewsByDate
 } from "../review/review_controller.js";
 
 async function createReviewAPI(req, res) {
@@ -40,8 +42,36 @@ async function deleteReviewAPI(req, res) {
     }
 }
 
+async function viewReviewsAPI(req, res) {
+    console.log("View review API has been called.");
+
+    const viewReview_result = await viewReviews(req.body);
+    
+    if(viewReview_result.success) {
+        res.status(200).json(viewReview_result);
+    } else {
+        res.status(500).json(viewReview_result);
+    }
+}
+
+async function viewReviewsByDateAPI(req, res) {
+    console.log("View review by date API has been called.");
+
+    const viewReviewsByDate_result = await viewReviewsByDate(req.body);
+    
+    if(viewReviewsByDate_result.success) {
+        res.status(200).json(viewReviewsByDate_result);
+    } else {
+        res.status(500).json(viewReviewsByDate_result);
+    }
+}
+
+
+
 export {
     createReviewAPI,
     updateReviewAPI,
-    deleteReviewAPI
+    deleteReviewAPI,
+    viewReviewsAPI,
+    viewReviewsByDateAPI
 }

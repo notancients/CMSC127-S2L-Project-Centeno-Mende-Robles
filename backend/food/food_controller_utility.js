@@ -1,10 +1,10 @@
 
 function arrayIntoTupleParameter(list) {
-    let converted = '("buffer"';
-    list.forEach(element => {
-        converted = converted + `, "${element}"`
-    });
-    converted += ")"
+    let converted = '"buffer"';
+
+    for (let i=0; i<list.length;i++) {
+        converted = converted + `, "${list[i]}"`
+    }
     return converted;
 }
 
