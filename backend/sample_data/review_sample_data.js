@@ -1,0 +1,5 @@
+const REVIEW_SAMPLE_DATA =[]
+
+export {
+    REVIEW_SAMPLE_DATA
+}

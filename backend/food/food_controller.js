@@ -8,7 +8,7 @@ import { arrayIntoTupleParameter } from './food_controller_utility.js';
 
 async function insertImage(food_id, image_url) {
     console.log("Inserting food image.");
-    image_url.forEach(async (element) => {
+    [...image_url].forEach(async (element) => {
         try {
             const IMAGE_QUERY = "INSERT INTO FOOD_IMAGE(food_id, link) VALUES (?, ?)";
             let created_food_image = await POOL.query(

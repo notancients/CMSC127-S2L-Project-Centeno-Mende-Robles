@@ -12,6 +12,7 @@ import { createUserAPI } from "./user_api_controller.js";
 
 import { 
     populateEstablishmentsAPI, 
+    populateFoodAPI, 
     populateUsersAPI 
 } from "../sample_data/populate_database.js";
 
@@ -44,6 +45,7 @@ router.get("/", (req, res) => {
 // DATA POPULATION
 router.get("/api/populate-users", populateUsersAPI);
 router.get("/api/populate-establishments", populateEstablishmentsAPI);
+router.get("/api/populate-food", populateFoodAPI);
 
 // USER API
 
