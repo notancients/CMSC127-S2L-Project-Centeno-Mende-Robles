@@ -2,6 +2,8 @@ import { USER_SAMPLE_DATA } from "./user_sample_data.js"
 
 import { ESTABLISHMENT_SAMPLE_DATA } from "./establishment_sample_data.js";
 
+import { REVIEW_SAMPLE_DATA } from "./review_sample_data.js";
+
 import { createUser } from "../user/user_controller.js"
 import { createEstablishment } from "../establishment/establishment_controller.js";
 import { createFood } from "../food/food_controller.js";
@@ -78,6 +80,7 @@ async function populateReview(reviewArray) {
     console.log("Populating the review database.");
     for (let i = 0; i < reviewArray.length; i++) {
         console.log("Adding: ", reviewArray[i].post_content);
+        console.log(reviewArray[i]);
         await createReview(reviewArray[i]);
     }
 
@@ -87,7 +90,7 @@ async function populateReview(reviewArray) {
 async function populateReviewAPI(req, res) {
     console.log("Populate review API has been called.");
 
-    populateReview(FOOD_SAMPLE_DATA);
+    populateReview(REVIEW_SAMPLE_DATA);
     
     res.send({
         "success": true,
