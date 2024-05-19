@@ -455,27 +455,33 @@ async function getFoodByCategory({category, establishment_name}) {
 
 
 async function getFoodByPriceRange({establishment_name, min_price, max_price}) {
-    const QUERY = "SELECT * FROM FOOD WHERE price BETWEEN ? AND ?";
+    const QUERY = "SELECT food_id FROM FOOD NATURAL JOIN ESTABLISHMENT WHERE establishment_name LIKE ? AND price BETWEEN ? AND ?";
 
     try {
-        const result = await POOL.query(
+        const foodByPriceRange = await POOL.query(
             QUERY,
-            [min_price, max_price]
+            [`%${establishment_name}%`, min_price, max_price]
         )
         
-        let success_message = {
-            "success": true,
-            "data": result[0],
-            "message": `Successfully found food entries for: ${establishment_name}.`
-        };
+        let completeFoodDetails = foodByPriceRange[0];
         
-        return success_message;
+        for (let i = 0; i<completeFoodDetails.length; i++) {
+            let food_id = completeFoodDetails[i].food_id;
+
+            completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+        }
+        
+        return {
+            "success": true,
+            "data": completeFoodDetails,
+            "message": `Successfully found food entries for the given price range.`
+        };;
 
     } catch (e) {
         let failure_message = {
             "success": false,
             "data": result,
-            "message": `There was an error getting food entries for: ${establishment_name}.`
+            "message": `There was an error getting food entries for the given price range.`
         };
         return failure_message;
     }
