@@ -301,7 +301,35 @@ async function deleteFood({food_id}) {
 }
 
 
+async function getIngredients(food_id) {
+    const INGREDIENT_QUERY = "SELECT ingredients FROM FOOD_INGREDIENTS WHERE food_id=?";
+    const foodIngredient = await POOL.query(INGREDIENT_QUERY, [food_id]);
 
+    let ingredients = foodIngredient[0].map((element) => {
+        return(element["ingredients"]);
+    });
+    return ingredients;
+}
+
+async function getImages(food_id) {
+    const IMAGE_QUERY = "SELECT link FROM FOOD_IMAGE WHERE food_id=?";
+    const foodImages = await POOL.query(IMAGE_QUERY, [food_id]);
+
+    let images = foodImages[0].map((element) => {
+        return(element["link"]);
+    });
+    return images;
+}
+
+async function getCategory(food_id) {
+    const CATEGORY_QUERY = "SELECT food_category FROM FOOD_CATEGORY WHERE food_id=?";
+    const foodCategory = await POOL.query(CATEGORY_QUERY, [food_id]);
+
+    let category = foodCategory[0].map((element) => {
+        return(element["food_category"]);
+    });
+    return category;
+}
 
 async function getFoodByEstablishment({establishment_name}) {
     const QUERY = "SELECT * FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE ?";
@@ -312,14 +340,35 @@ async function getFoodByEstablishment({establishment_name}) {
             [`%${establishment_name}%`]
         )
         
+        let completeFoodDetails = foodByEstablishment[0];
+        // We need to combine the results of the foods with their corresponding
+        // related details
+
+        try {
+            for (let i = 0; i<completeFoodDetails.length; i++) {
+                let food_id = completeFoodDetails[i].food_id;
+
+                completeFoodDetails[i]["images"] = await getImages(food_id);
+                completeFoodDetails[i]["ingredients"] = await getIngredients(food_id);
+                completeFoodDetails[i]["category"] = await getCategory(food_id);
+            }
+        } catch(err) {
+            console.log(err);
+            return {
+                "success": false,
+                "data": err,
+                "message": `There was an error retrieving the related details.`
+            };
+        }
+        // console.log(completeFoodDetails);
         return {
             "success": true,
-            "data": foodByEstablishment,
+            "data": completeFoodDetails,
             "message": `Successfully found food entries for: ${establishment_name}.`
         };
 
     } catch (err) { 
-        return failure_message = {
+        return {
             "success": false,
             "data": err,
             "message": `There was an error getting food entries for: ${establishment_name}.`
@@ -349,12 +398,12 @@ async function getFoodByCategory({category, establishment_id}) {
         };
 
     } catch (err) {
-        let failure_message = {
+        console.log("There was an error: ", err);
+        return {
             "success": false,
             "data": err,
             "message": `There was an error getting food entries for the category(ies): ${category}.`
         };
-        return failure_message;
     }
 }
 

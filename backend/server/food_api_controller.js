@@ -3,7 +3,8 @@ import {
     deleteFood, 
     editFood, 
     getFoodByEstablishment,
-    getFoodByCategory
+    getFoodByCategory,
+    getFoodByPriceRange
 } from "../food/food_controller.js";
 
 const createFoodAPI = async (req, res) => {
@@ -67,7 +68,7 @@ async function getFoodByTypeAPI (req, res) {
 
 async function getFoodByPriceAPI(req, res) {
     // console.log(req.body);
-    const getFoodByEstablishment_result = await getFoodByPrice(req.query);
+    const getFoodByEstablishment_result = await getFoodByPriceRange(req.query);
 
     const response = {
         "success": getFoodByEstablishment_result.success,
