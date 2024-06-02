@@ -7,18 +7,20 @@ import HomePage from './pages/homepage/page_homepage';
 import FoodByEstablishment from './pages/establishment_list/page_establishment_food';
 import FoodReview from './pages/reviews/page_food_review';
 import EstablishmentReview from './pages/reviews/page_establishment_reviews';
+import CreateEstablishmentReview from './pages/reviews/create_establishment_review';
 
 function Router() {
 
-  return(
+  return (
     <Routes>
-        <Route path="/" element={<LandingPage />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/view-all-establishments" element={<EstablishmentList />}></Route>
-        <Route path="/homepage" element={<HomePage/>}></Route>
-        <Route path="/food-by-establishment/:establishment_id" element={<FoodByEstablishment/>}></Route>
-        <Route path="/food-review/:food_id" element={<FoodReview />}></Route>
-        <Route path="/establishment-review/:establishment_id" element={<EstablishmentReview />}></Route>
+      <Route path="/" element={<LandingPage />}></Route>
+      <Route path="/login" element={<Login />}></Route>
+      <Route path="/view-all-establishments" element={<EstablishmentList />}></Route>
+      <Route path="/homepage" element={<HomePage />}></Route>
+      <Route path="/food-by-establishment/:establishment_id" element={<FoodByEstablishment />}></Route>
+      <Route path="/food-review/:food_id" element={<FoodReview />}></Route>
+      <Route path="/establishment-review/:establishment_id" element={<EstablishmentReview />}></Route>
+      <Route path="/create-establishment-review/:establishment_id" element={<CreateEstablishmentReview />}></Route>
     </Routes>
   )
 }

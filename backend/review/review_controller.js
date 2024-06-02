@@ -1,17 +1,18 @@
 import { POOL } from "../server/pool.js"
 
-async function createReview({rating, post_content, user_id, review_type, target_id}) {
+async function createReview({ rating, post_content, user_id, review_type, target_id }) {
     console.log("Creating a review.");
 
     // Validate if target establishment or food exists or not
 
     let exists_validator;
-    if ( review_type == 0 ) { // Check food
+    if (review_type == 0) { // Check food
         exists_validator = await POOL.query(
             "SELECT * FROM FOOD WHERE food_id=?",
             target_id
         );
-    } else if ( review_type == 1 ) { // check establishment
+
+    } else if (review_type == 1) { // check establishment
         exists_validator = await POOL.query(
             "SELECT * FROM ESTABLISHMENT WHERE establishment_id=?",
             target_id
@@ -24,11 +25,24 @@ async function createReview({rating, post_content, user_id, review_type, target_
             "data": null,
             "message": "The target food or establishment does not exist."
         }
+    } else {
+        exists_validator = await POOL.query("SELECT COUNT(*) as COUNT FROM REVIEW WHERE review_type=? AND target_id=? AND user_id=?",
+            [review_type, target_id, user_id]
+        );
+        console.log(exists_validator);
+        if (exists_validator[0][0].COUNT > 0) {
+            return {
+                "success": false,
+                "data": exists_validator[0][0],
+                "message": "Review already exists"
+            };
+        }
+
     }
 
     try {
         const CREATE_REVIEW_QUERY = "INSERT INTO REVIEW(rating, post_content, user_id, review_type, target_id) VALUES(?, ?, ?, ?, ?)";
-        
+
         const created_review = await POOL.query(
             CREATE_REVIEW_QUERY,
             [rating, post_content, user_id, review_type, target_id]
@@ -50,12 +64,12 @@ async function createReview({rating, post_content, user_id, review_type, target_
     }
 }
 
-async function updateReview({review_id, rating, post_content}) {
+async function updateReview({ review_id, rating, post_content }) {
     console.log("Updating a review.");
 
     try {
         const UPDATE_REVIEW_QUERY = "UPDATE REVIEW SET rating=?, post_content=? WHERE review_id=?";
-        
+
         const updated_review = await POOL.query(
             UPDATE_REVIEW_QUERY,
             [rating, post_content, review_id]
@@ -77,7 +91,7 @@ async function updateReview({review_id, rating, post_content}) {
     }
 }
 
-async function deleteReview({review_id}) {
+async function deleteReview({ review_id }) {
     console.log("Deleting a review.");
 
     try {
@@ -87,7 +101,7 @@ async function deleteReview({review_id}) {
             DELETE_REVIEW_QUERY,
             [review_id]
         )
-        
+
         return {
             "success": true,
             "data": deleted_review,
@@ -104,7 +118,7 @@ async function deleteReview({review_id}) {
     }
 }
 
-async function viewReviews({review_type, target_id}){
+async function viewReviews({ review_type, target_id }) {
     console.log("Viewing reviews.");
 
     try {
@@ -135,8 +149,8 @@ async function viewReviews({review_type, target_id}){
     }
 }
 
-async function viewReviewsByDate({review_type, target_id}) {
-console.log("Viewing reviews by date.");
+async function viewReviewsByDate({ review_type, target_id }) {
+    console.log("Viewing reviews by date.");
 
 
     try {
@@ -163,7 +177,7 @@ console.log("Viewing reviews by date.");
             "data": err,
             "message": `There was an error retrieving a review.`
         }
-        
+
     }
 }
 

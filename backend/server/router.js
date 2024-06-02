@@ -10,14 +10,14 @@ import {
     viewHighlyRatedEstablishmentAPI
 } from "./establishment_api_controller.js"
 
-import { 
+import {
     createUserAPI,
     loginAPI
 } from "./user_api_controller.js";
 
-import { 
-    populateEstablishmentsAPI, 
-    populateFoodAPI, 
+import {
+    populateEstablishmentsAPI,
+    populateFoodAPI,
     populateUsersAPI,
     populateReviewAPI
 } from "../sample_data/populate_database.js";
@@ -44,7 +44,7 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
     res.send({
-        "success":true,
+        "success": true,
         "data": [],
         "message": "Welcome to the homepage."
     });
