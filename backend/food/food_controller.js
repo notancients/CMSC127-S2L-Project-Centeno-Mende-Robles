@@ -370,12 +370,22 @@ async function getFoodByEstablishment({establishment_id}) {
             QUERY,
             [establishment_id]
         )
-        
-        let completeFoodDetails = foodByEstablishment[0];
+        let food_details = foodByEstablishment[0];
         // We need to combine the results of the foods with their corresponding
         // related details
 
         // console.log(completeFoodDetails);
+        let completeFoodDetails = [];
+        for(let i = 0; i<food_details.length; i++) {
+            let element = food_details[i];
+            element["images"] = await getImages(element.food_id);
+            element["ingredients"] = await getIngredients(element.food_id);
+            element["category"] = await getCategory(element.food_id);
+            completeFoodDetails.push(element);
+        }
+
+        
+        
         return {
             "success": true,
             "data": completeFoodDetails,
