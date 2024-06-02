@@ -10,7 +10,10 @@ import {
     viewHighlyRatedEstablishmentAPI
 } from "./establishment_api_controller.js"
 
-import { createUserAPI } from "./user_api_controller.js";
+import { 
+    createUserAPI,
+    loginAPI
+} from "./user_api_controller.js";
 
 import { 
     populateEstablishmentsAPI, 
@@ -57,6 +60,7 @@ router.get("/api/populate-review", populateReviewAPI);
 
 
 router.post("/api/create-user", createUserAPI);
+router.post("/api/login", loginAPI);
 
 // ESTABLISHMENT API
 router.post("/api/create-establishment", createEstablishmentAPI);

@@ -14,6 +14,7 @@ async function createUser({first_name, last_name, username, user_password}) {
             "SELECT COUNT(*) AS count FROM USER WHERE username=?",
             [username]
         ); 
+
         const existing_count = existing_user[0][0].count;
         if (existing_user.count != 0) {
             return {
@@ -47,7 +48,81 @@ async function createUser({first_name, last_name, username, user_password}) {
 }
 
 
+async function login({username, user_password}) {
+    console.log(`${username} is logging in.`);
+
+    try {
+        //////////////////////////////////////////////////////////////////////
+        // check if the user exists                                         //
+        //////////////////////////////////////////////////////////////////////
+        
+        const existing_user = await POOL.query(
+            "SELECT COUNT(*) AS count FROM USER WHERE username=?",
+            [username]
+        ); 
+
+        const existing_count = existing_user[0][0].count;
+        if (existing_user.count == 0) {
+            return {
+                "success": false,
+                "data": "Exists already",
+                "message": "A user exists with that username does not exist."
+            }
+        }
+        //////////////////////////////////////////////////////////////////////
+        // verify the password                                              //
+        //////////////////////////////////////////////////////////////////////
+        
+        const LOGIN_QUERY = "SELECT user_password FROM USER WHERE username=?";
+        const login_query_result = await POOL.query(
+            LOGIN_QUERY,
+            [username]
+        );
+
+        let user_details = login_query_result[0][0];
+
+        let encrypt_user_query = await POOL.query(
+            "SELECT AES_ENCRYPT(?, ?)",
+            [user_password, ENCRYPTION_KEY]
+        );
+
+        encrypt_user_query = encrypt_user_query[0][0]
+
+        // console.log(encrypt_user_query, user_details);
+
+        let pass_a = Object.entries(user_details)[0][1];
+        let pass_b = Object.entries(encrypt_user_query)[0][1];
+
+        pass_a = pass_a.toString('utf8')
+        pass_b = pass_b.toString('utf8')
+
+        if (pass_a != pass_b) {
+            return {
+                "success": false,
+                "data": null,
+                "message": "Incorrect password"
+            };
+        } else {
+            return {
+                "success": true,
+                "data": null,
+                "message": `${username} has succesfully logged in.`
+            }
+        }
+        
+    } catch (err) {
+
+        console.log(["There was an error:", err]);
+
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error with logging in for: ${username}.`
+        }
+    }
+}
 
 export {
-    createUser
+    createUser,
+    login
 }

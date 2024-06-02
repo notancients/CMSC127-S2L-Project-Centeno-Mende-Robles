@@ -1,5 +1,6 @@
 import {
-    createUser
+    createUser,
+    login
 } from "../user/user_controller.js";
 
 
@@ -18,6 +19,20 @@ async function createUserAPI(req, res) {
     
 }
 
+async function loginAPI(req, res) {
+    console.log("Login API has been called.");
+
+    const login_result = await login(req.body);
+
+    if(login_result.success) {
+        res.status(200).json(login_result);
+    } else {
+        res.status(500).json(login_result);
+    }
+    
+}
+
 export {
-    createUserAPI
+    createUserAPI,
+    loginAPI
 }
