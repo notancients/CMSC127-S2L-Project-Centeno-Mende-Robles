@@ -362,45 +362,31 @@ async function getFoodById(food_id) {
     }
 }
 
-async function getFoodByEstablishment({establishment_name}) {
-    const QUERY = "SELECT food_id FROM FOOD f NATURAL JOIN ESTABLISHMENT e where `establishment_name` LIKE ?";
+async function getFoodByEstablishment({establishment_id}) {
+    const QUERY = "SELECT * FROM FOOD WHERE establishment_id=?";
 
     try {
         const foodByEstablishment = await POOL.query(
             QUERY,
-            [`%${establishment_name}%`]
+            [establishment_id]
         )
         
         let completeFoodDetails = foodByEstablishment[0];
         // We need to combine the results of the foods with their corresponding
         // related details
 
-        try {
-            for (let i = 0; i<completeFoodDetails.length; i++) {
-                let food_id = completeFoodDetails[i].food_id;
-
-                completeFoodDetails[i] = (await getFoodById(food_id))["data"];
-            }
-        } catch(err) {
-            console.log(err);
-            return {
-                "success": false,
-                "data": err,
-                "message": `There was an error retrieving the related details.`
-            };
-        }
         // console.log(completeFoodDetails);
         return {
             "success": true,
             "data": completeFoodDetails,
-            "message": `Successfully found food entries for: ${establishment_name}.`
+            "message": `Successfully found food entries for: ${establishment_id}.`
         };
 
     } catch (err) { 
         return {
             "success": false,
             "data": err,
-            "message": `There was an error getting food entries for: ${establishment_name}.`
+            "message": `There was an error getting food entries for: ${establishment_id}.`
         };
     }
 }

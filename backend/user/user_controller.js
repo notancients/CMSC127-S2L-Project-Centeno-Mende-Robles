@@ -15,8 +15,11 @@ async function createUser({first_name, last_name, username, user_password}) {
             [username]
         ); 
 
+        console.log(existing_user);
+
         const existing_count = existing_user[0][0].count;
-        if (existing_user.count != 0) {
+        console.log(existing_count);
+        if (existing_count != 0) {
             return {
                 "success": false,
                 "data": "Exists already",
