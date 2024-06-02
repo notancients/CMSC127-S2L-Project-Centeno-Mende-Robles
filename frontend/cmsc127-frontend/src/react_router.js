@@ -5,6 +5,7 @@ import Login from './pages/login/page_login';
 import EstablishmentList from './pages/establishment_list/page_establishment_list';
 import HomePage from './pages/homepage/page_homepage';
 import FoodByEstablishment from './pages/establishment_list/page_establishment_food';
+import FoodReview from './pages/food_review/page_food_review';
 
 function Router() {
 
@@ -15,7 +16,7 @@ function Router() {
         <Route path="/view-all-establishments" element={<EstablishmentList />}></Route>
         <Route path="/homepage" element={<HomePage/>}></Route>
         <Route path="/food-by-establishment/:establishment_id" element={<FoodByEstablishment/>}></Route>
-        
+        <Route path="/food-review/:food_id" element={<FoodReview />}></Route>
     
     </Routes>
   )

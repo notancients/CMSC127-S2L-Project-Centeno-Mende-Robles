@@ -6,7 +6,7 @@ function FoodTable({data}) {
     function ViewFoodReviewRedirect({food_id}) {
 
         return (
-            <Link to={`/food-by-establishment/${food_id}`}>View Reviews</Link>
+            <Link to={`/food-review/${food_id}`}>View Reviews</Link>
         )
     
     }

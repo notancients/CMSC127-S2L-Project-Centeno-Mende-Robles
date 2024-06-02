@@ -107,7 +107,6 @@ async function deleteReview({review_id}) {
 async function viewReviews({review_type, target_id}){
     console.log("Viewing reviews.");
 
-
     try {
         const VIEW_REVIEWS_QUERY = "SELECT * FROM REVIEW WHERE review_type=? AND target_id=?";
 

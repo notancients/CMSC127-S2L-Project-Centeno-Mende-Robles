@@ -45,7 +45,8 @@ async function deleteReviewAPI(req, res) {
 async function viewReviewsAPI(req, res) {
     console.log("View review API has been called.");
 
-    const viewReview_result = await viewReviews(req.body);
+    console.log(req.body);
+    const viewReview_result = await viewReviews(req.query);
     
     if(viewReview_result.success) {
         res.status(200).json(viewReview_result);
