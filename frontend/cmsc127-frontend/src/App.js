@@ -1,33 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
 import axios from "axios";
 
 import { useState, useEffect} from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-async function App() {
-  console.log("test");
-  axios.get("http://localhost:3001/api/view-all-establishment").then(response => {
-    console.log(response);
-  }).catch( error => {console.log(error)});
+import LandingPage from './pages/landingpage/page_landing';
+import Login from './pages/login/page_login';
+import EstablishmentList from './pages/establishment_list/page_establishment_list';
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App() {
+
+  return(
+    <Routes>
+      <Route path="/" element={<LandingPage />}></Route>
+      <Route path="/login" element={<Login />}></Route>
+      <Route path="/view-all-establishments" element={<EstablishmentList />}></Route>
+
+    </Routes>
+  )
 }
 
 export default App;
