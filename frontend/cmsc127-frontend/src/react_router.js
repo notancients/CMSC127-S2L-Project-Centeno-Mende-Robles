@@ -1,9 +1,10 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
 import LandingPage from './pages/landingpage/page_landing';
 import Login from './pages/login/page_login';
 import EstablishmentList from './pages/establishment_list/page_establishment_list';
 import HomePage from './pages/homepage/page_homepage';
-
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import FoodByEstablishment from './pages/establishment_list/page_establishment_food';
 
 function Router() {
 
@@ -13,6 +14,8 @@ function Router() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/view-all-establishments" element={<EstablishmentList />}></Route>
         <Route path="/homepage" element={<HomePage/>}></Route>
+        <Route path="/food-by-establishment/:establishment_name" element={<FoodByEstablishment/>}></Route>
+        
     
     </Routes>
   )

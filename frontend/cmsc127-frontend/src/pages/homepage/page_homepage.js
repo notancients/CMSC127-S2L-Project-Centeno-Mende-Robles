@@ -1,3 +1,4 @@
+import HomePageAppBar from "./homepage_appbar";
 
 
 
@@ -7,9 +8,11 @@ function HomePage() {
 
     
     return (
-        <div className="container">
-            Welcome {first_name}
-        </div>
+    <>
+    <HomePageAppBar/>
+    <div className="container">
+    </div>
+    </>
     )
 }
 

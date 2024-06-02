@@ -41,6 +41,9 @@ function Login() {
                 sessionStorage.setItem("user_type", response_data.data.user_type);
                 sessionStorage.setItem("user_id", response_data.data.user_id);
                 sessionStorage.setItem("first_name", response_data.data.first_name);
+
+                console.log(sessionStorage.getItem("first_name"));
+                
                 navigate("/homepage")
             }
         } catch (err) {
