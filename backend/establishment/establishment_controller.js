@@ -165,11 +165,37 @@ async function viewHighlyRatedEstablishment() {
     }
 }
 
+async function getEstablishmentById({establishment_id}) {
+    console.log("Getting establishment by id.");
+
+    try {
+        const ESTABLISHMENT_ID_QUERY = "SELECT * FROM ESTABLISHMENT WHERE establishment_id=?";
+        const establishment_id_result = (await POOL.query(
+            ESTABLISHMENT_ID_QUERY,
+            [establishment_id]
+        ))[0];
+
+        return {
+            "success":true,
+            "data": establishment_id_result,
+            "message": "Successfully returned establishment for the given id."
+        }
+    } catch (err) {
+        console.log(["There was an error:", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": "There was an error with retrieving the establishment for the given id."
+        }
+    }
+}
+
 export {
     createEstablishment,
     searchEstablishment,
     updateEstablishment,
     deleteEstablishment,
     viewAllEstablishment,
-    viewHighlyRatedEstablishment
+    viewHighlyRatedEstablishment,
+    getEstablishmentById
 }

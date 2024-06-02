@@ -63,11 +63,11 @@ function EstablishmentList() {
     function EstablishmentDropdown() {
         return(
         <div className="dropdown">
-            <button onClick={toggleDropdown}>Select by Category</button>
+            <button onClick={toggleDropdown}>Order by range</button>
             {isOpen && (
             <ul className="dropdown-menu">
                 {order_options.map((option) => (
-                <li key={`category_${option}`} onClick={() => handleHighlyRated(option)}>
+                <li key={`rating_${option}`} onClick={() => handleHighlyRated(option)}>
                     {option}
                 </li>
                 ))}
