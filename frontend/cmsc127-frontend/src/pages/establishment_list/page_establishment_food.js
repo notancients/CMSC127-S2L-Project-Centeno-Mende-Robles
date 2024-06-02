@@ -7,7 +7,7 @@ import FoodTable from '../components/food_table';
 let SERVER = ENV.SERVER;
 let HEADER = ENV.HEADER;
 
-const categories = [ "Filipino","Greek","Western","Asian","Japanese","Turkish","Vietnamese","Chinese","Fusion","Thai","Russian","Korean" ]
+const categories = ["None", "Filipino","Greek","Western","Asian","Japanese","Turkish","Vietnamese","Chinese","Fusion","Thai","Russian","Korean" ]
 
 function FoodByEstablishment() {
     // Get a specific query parameter
@@ -18,24 +18,7 @@ function FoodByEstablishment() {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const toggleDropdown = () => setIsOpen(!isOpen);
-
-
-    function filterCategory(category) {
-        let foodListByCategory = [];
-        allFood.map((element) => {
-            if(element.category.includes(category)) {
-                console.log(element);
-                foodListByCategory.push(element);
-            }
-        })
-        return foodListByCategory;
-    }
-    const handleClick = (option) => {
-        setFood(filterCategory(option));
-        setIsOpen(false);
-    };
-
+    const [ascendingPrice, setAscendingPrice] = useState(null);
 
     useEffect( () => {
         console.log("Fetching food by establishment name.");
@@ -56,6 +39,27 @@ function FoodByEstablishment() {
         fetchFoodByEstablishment();
     }, []);
 
+    const toggleDropdown = () => setIsOpen(!isOpen);
+
+    function filterCategory(category) {
+        let foodListByCategory = [];
+        allFood.map((element) => {
+            if(element.category.includes(category)) {
+                console.log(element);
+                foodListByCategory.push(element);
+            }
+        })
+        return foodListByCategory;
+    }
+    const handleSelect = (option) => {
+        if(option === "None") {
+            setFood(allFood);
+        } else {
+            setFood(filterCategory(option));
+        }
+        setIsOpen(false);
+    };
+
     function CategoryDropdown() {
         return(
         <div className="dropdown">
@@ -63,7 +67,7 @@ function FoodByEstablishment() {
             {isOpen && (
             <ul className="dropdown-menu">
                 {categories.map((option) => (
-                <li key={`category_${option}`} onClick={() => handleClick(option)}>
+                <li key={`category_${option}`} onClick={() => handleSelect(option)}>
                     {option}
                 </li>
                 ))}
@@ -73,12 +77,37 @@ function FoodByEstablishment() {
         )
     }
 
+
+    function handleSortByPrice() {
+        console.log("Sorting by price.");
+        if(ascendingPrice == null) setAscendingPrice(false);
+
+        setAscendingPrice(!ascendingPrice);
+        
+        let newFood = [...food];
+        newFood.sort( (a, b) => ascendingPrice ? b.price - a.price : a.price - b.price);
+        
+        setFood(newFood);
+    }
+
+
+    function SortByPriceButton() {
+        return(
+        <>
+        <button onClick={handleSortByPrice}>
+            Sort by Price
+        </button>
+        {ascendingPrice != null && `${ascendingPrice ? "Ascending" : "Descending"}`}
+        </>
+        );
+    }
+
     return(
     <>
     <div className='container'>
         <FoodTable data={food}/>
         <div>
-            <button>Sort by Price</button>
+            <SortByPriceButton/>
             <CategoryDropdown/>
         </div>
     </div>
