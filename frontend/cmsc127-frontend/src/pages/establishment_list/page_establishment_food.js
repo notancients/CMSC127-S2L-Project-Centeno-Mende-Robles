@@ -1,12 +1,16 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ENV from '../../env';
+import { useLocation, useParams } from 'react-router-dom';
+import FoodTable from '../components/food_table';
 
 let SERVER = ENV.SERVER;
 let HEADER = ENV.HEADER;
 
-function FoodByEstablishment({ match }) {
-    const establishment_name = match.params.establishment_name;
+
+function FoodByEstablishment() {
+    // Get a specific query parameter
+    const {establishment_id} = useParams();
 
     let [food, setFood] = useState([]);
 
@@ -15,11 +19,11 @@ function FoodByEstablishment({ match }) {
         const fetchFoodByEstablishment = async () => {
             try {
                 const response = await axios.get(
-                    `http://${SERVER}/api/get-food-by-establishment?establishment_name=${establishment_name}`,
+                    `http://${SERVER}/api/get-food-by-establishment?establishment_id=${establishment_id}`,
                     HEADER
                 );
-                console.log(response.data.data[0]);
-                setFood(response.data.data[0]);
+                console.log(response.data.data);
+                setFood(response.data.data);
             } catch (err) {
                 console.log(err);
             }
@@ -27,6 +31,14 @@ function FoodByEstablishment({ match }) {
 
         fetchFoodByEstablishment();
     }, []);
+
+    return(
+    <>
+    <div className='container'>
+        <FoodTable data={food}/>
+    </div>
+    </>
+    )
 }
 
 export default FoodByEstablishment;

@@ -14,7 +14,7 @@ function Router() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/view-all-establishments" element={<EstablishmentList />}></Route>
         <Route path="/homepage" element={<HomePage/>}></Route>
-        <Route path="/food-by-establishment/:establishment_name" element={<FoodByEstablishment/>}></Route>
+        <Route path="/food-by-establishment/:establishment_id" element={<FoodByEstablishment/>}></Route>
         
     
     </Routes>
