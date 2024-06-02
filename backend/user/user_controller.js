@@ -62,13 +62,14 @@ async function login({username, user_password}) {
         ); 
 
         const existing_count = existing_user[0][0].count;
-        if (existing_user.count == 0) {
+        if (existing_count == 0) {
             return {
                 "success": false,
-                "data": "Exists already",
-                "message": "A user exists with that username does not exist."
+                "data": "Doesn't exist",
+                "message": "A user with that username does not exist."
             }
         }
+
         //////////////////////////////////////////////////////////////////////
         // verify the password                                              //
         //////////////////////////////////////////////////////////////////////
@@ -103,9 +104,14 @@ async function login({username, user_password}) {
                 "message": "Incorrect password"
             };
         } else {
+            let details = await POOL.query(
+                "SELECT user_id, first_name, last_name, user_type FROM USER WHERE username=?",
+                [username]
+            );
+
             return {
                 "success": true,
-                "data": null,
+                "data": details[0][0],
                 "message": `${username} has succesfully logged in.`
             }
         }
