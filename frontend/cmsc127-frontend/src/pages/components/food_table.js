@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 
 function FoodTable({data}) {
-    let headers = ['ID', "Food Name", "Price", "Reviews"]
+    let headers = ['ID', "Food Name", "Price", "Ingredients", "Category", "Reviews"]
 
     function ViewFoodReviewRedirect({food_id}) {
 
@@ -27,6 +27,8 @@ function FoodTable({data}) {
                     <td>{item.food_id}</td>
                     <td>{item.food_name}</td>
                     <td>{item.price}</td>
+                    <td>{item.ingredients}</td>
+                    <td>{item.category}</td>
                     <td><ViewFoodReviewRedirect food_id={item.food_id}/></td>
                 </tr>
             } )}
