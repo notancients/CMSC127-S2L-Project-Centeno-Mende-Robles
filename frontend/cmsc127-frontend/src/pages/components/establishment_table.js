@@ -8,7 +8,12 @@ function EstablishmentTable({data}) {
         return (
             <Link to={`/food-by-establishment/${establishment_id}`}>View Food</Link>
         )
-    
+    }
+
+    function ViewEstablishmentReviewRedirect({establishment_id}) {
+        return (
+            <Link to={`/establishment-review/${establishment_id}`}>View Reviews</Link>
+        )
     }
 
     return(
@@ -28,6 +33,7 @@ function EstablishmentTable({data}) {
                     <td>{item.establishment_location}</td>
                     <td>{item.operating_hours}</td>
                     <td><ViewFoodRedirect establishment_id={item.establishment_id}/></td>
+                    <td><ViewEstablishmentReviewRedirect establishment_id={item.establishment_id}/></td>
                 </tr>
             } )}
         </tbody>

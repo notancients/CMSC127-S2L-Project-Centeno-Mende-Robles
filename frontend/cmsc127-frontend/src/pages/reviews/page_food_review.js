@@ -11,16 +11,15 @@ function FoodReview({data}) {
     let headers = ['ID', 'Rating', 'Post Content', 'Date Published'];
 
     const {food_id} = useParams();
-    console.log(food_id);
 
     const [foodReview, setFoodReview] = useState([]);
 
     useEffect( () => {
-        console.log("Fetching establishments data.");
+        console.log("Fetching food review data.");
         const fetchReviews = async () => {
             try {
                 const response = await axios.get(
-                    `http://${SERVER}/api/view-reviews?target_id=${parseInt(food_id)}&review_type=1`,
+                    `http://${SERVER}/api/view-reviews?target_id=${parseInt(food_id)}&review_type=0`,
                 );
                 console.log(response);
                 setFoodReview(response.data.data);
