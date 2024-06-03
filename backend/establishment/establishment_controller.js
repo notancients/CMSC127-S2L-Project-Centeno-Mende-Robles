@@ -84,7 +84,7 @@ async function updateEstablishment({establishment_id, establishment_name, establ
 }
 
 async function deleteEstablishment({establishment_id}) {
-    console.log("Deleting an establishment.");
+    console.log("Deleting an establishment:", establishment_id);
 
     try {
         const QUERY = "DELETE FROM ESTABLISHMENT WHERE establishment_id=?";

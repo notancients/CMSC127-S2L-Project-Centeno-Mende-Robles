@@ -4,7 +4,8 @@ import {
     editFood, 
     getFoodByEstablishment,
     getFoodByCategory,
-    getFoodByPriceRangeAndCategory
+    getFoodByPriceRangeAndCategory,
+    getFoodByUserId
 } from "../food/food_controller.js";
 
 const createFoodAPI = async (req, res) => {
@@ -78,11 +79,23 @@ async function getFoodByPriceRangeAndCategoryAPI(req, res) {
     }
 }
 
+async function getFoodByUserIdAPI(req, res) {
+    console.log("Get food by user id API has been called.");
+    const getFoodByUserId_result = await getFoodByUserId(req.query);
+
+    if(getFoodByUserId_result.success) {
+        res.status(200).json(getFoodByUserId_result);
+    } else {
+        res.status(500).json(getFoodByUserId_result);
+    }
+}
+
 export {
     createFoodAPI,
     updateFoodAPI,
     deleteFoodAPI,
     getFoodByEstablishmentAPI,
     getFoodByTypeAPI,
-    getFoodByPriceRangeAndCategoryAPI
+    getFoodByPriceRangeAndCategoryAPI,
+    getFoodByUserIdAPI
 }

@@ -19,8 +19,14 @@ function HomePageAppBar() {
     }
 
     let target_pages = {
+<<<<<<< HEAD
         "Create Review": "/create-review",
         "View All Establishments": "/view-all-establishments"
+=======
+        "Create Review" : "/create-review",
+        "View All Establishments" : "/view-all-establishments",
+        "Update Establishment": "/update-establishment"
+>>>>>>> 3f71f756aedc28b52561d7c01610d21cb1646e5d
     }
 
     return (

@@ -30,7 +30,8 @@ import {
     updateFoodAPI,
     getFoodByEstablishmentAPI,
     getFoodByTypeAPI,
-    getFoodByPriceRangeAndCategoryAPI
+    getFoodByPriceRangeAndCategoryAPI,
+    getFoodByUserIdAPI
 } from "./food_api_controller.js";
 
 
@@ -68,7 +69,7 @@ router.post("/api/login", loginAPI);
 router.post("/api/create-establishment", createEstablishmentAPI);
 router.get("/api/search-establishment", searchEstablishmentAPI);
 router.patch("/api/update-establishment", updateEstablishmentAPI);
-router.delete("/api/delete-establishment", deleteEstablishmentAPI);
+router.post("/api/delete-establishment", deleteEstablishmentAPI);
 router.get("/api/view-all-establishment", viewAllEstablishmentAPI);
 router.get("/api/get-highly-rated-establishment", viewHighlyRatedEstablishmentAPI)
 router.get("/api/get-establishment-by-id", getEstablishmentByIdAPI);
@@ -76,11 +77,12 @@ router.get("/api/get-establishment-by-user-id", getEstablishmentByUserIdAPI);
 
 // FOOD API
 router.post("/api/create-food", createFoodAPI);
-router.delete("/api/delete-food", deleteFoodAPI);
+router.post("/api/delete-food", deleteFoodAPI);
 router.patch("/api/update-food", updateFoodAPI);
 router.get("/api/get-food-by-establishment", getFoodByEstablishmentAPI);
 router.get("/api/get-food-by-type", getFoodByTypeAPI);
 router.get("/api/get-food-by-price-category", getFoodByPriceRangeAndCategoryAPI);
+router.get("/api/get-food-by-user-id", getFoodByUserIdAPI);
 
 
 

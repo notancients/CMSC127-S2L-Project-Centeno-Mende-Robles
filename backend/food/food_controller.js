@@ -586,7 +586,54 @@ async function getFoodByPriceRangeAndCategory({establishment_name, min_price, ma
     
 }
 
+async function getFoodByUserId({user_id}) {
+    console.log("Getting food by user id.");
 
+    try {
+        const ESTABLISHMENTS_BY_USER = (await POOL.query(
+            `SELECT establishment_id FROM ESTABLISHMENT WHERE established_by=?`,
+            [user_id]
+        ))[0];
+        
+        let qn_mark_placeholder = [...ESTABLISHMENTS_BY_USER].map(() => '?').join(', '); // create the appropriate amount of qn mark place holerds
+    
+        let match_array = ESTABLISHMENTS_BY_USER.map((e) => e.establishment_id);
+
+        ////////////////////////////////////////////////////////////////////////
+        // End of parsing establishments by user                              //
+        ////////////////////////////////////////////////////////////////////////
+
+
+        const USER_ID_QUERY = `SELECT * FROM FOOD WHERE establishment_id IN (${qn_mark_placeholder})`;
+
+        const userId_result = await POOL.query(
+            USER_ID_QUERY,
+            [...match_array]
+        );
+
+        let completeFoodDetails = userId_result[0];
+
+        for (let i = 0; i<completeFoodDetails.length; i++) {
+            let food_id = completeFoodDetails[i].food_id;
+
+            completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+        }
+
+        return {
+            "success": true,
+            "data": completeFoodDetails,
+            "message": `Successfully found food entries for the given user id.`
+        };
+
+    } catch (err) {
+        console.log(["There was an error: ", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error getting food entries for the given user id.`
+        };;
+    }
+}
 
 
 
@@ -596,5 +643,6 @@ export {
     getFoodByPriceRangeAndCategory,
     editFood,
     deleteFood,
-    getFoodByCategory
+    getFoodByCategory,
+    getFoodByUserId
 }
