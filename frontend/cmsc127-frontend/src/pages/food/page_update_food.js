@@ -15,121 +15,83 @@ function UpdateForm({toggleModal, renderTable, targetId}) {
     const [price, setPrice] = useState("");
     const [ingredients, setIngredients] = useState([]);
     const [category, setCategory] = useState([]);
-
-    const [ingredientIsOpen, setIngredientsIsOpen] = useState(false);
-    const [categoryIsOpen, setCategoryIsOpen] = useState(false);
     
-    const INGREDIENT_OPTIONS = ["Beef", "Chicken", "Egg", "Fish", "Flour", "Garlic", "Lobster", "Onion", "Shrimp", "Pepper", "Pork", "Vinegar", "Cornstarch", "Ginger", "Soy Sauce", "Salt"  ];
-    const CATEGORY_OPTIONS = ["Filipino","Greek","Western","Asian","Japanese","Turkish","Vietnamese","Chinese","Fusion","Thai","Russian","Korean"];
-
     async function handleOnSubmit(event) {
         event.preventDefault();
 
         try {
             let request_body = {
                 "food_id": targetId,
+                "food_name": foodName,
                 "price": price,
                 "ingredients": ingredients,
-                "category": category
+                "category": category,
+                "image_url": []
             };
 
             // console.log(request_body);
 
             let response = await axios.patch(
-                `http://${SERVER}/api/update-establishment`,
+                `http://${SERVER}/api/update-food`,
                 request_body,
                 HEADER
             )
             
-            
+            console.log(response);
 
             if(response.data.success) {
                 renderTable();
                 toggleModal();
-                alert("Succesfully updated establishment");
+                alert("Succesfully updated food details.");
             }
         } catch (err) {
             console.log(["There was an error:", err]);
         }
     }
 
-    const toggleIngredientDropdown = () => {setIngredientsIsOpen(!ingredientIsOpen)};
-    const toggleCategoryDropdown = () => {setCategoryIsOpen(!categoryIsOpen)};
+    function handleCategoryChange(event) {
+        let newCategories = event.target.value;
+        newCategories = newCategories.split(',');
 
-    function handleIngredientChange(option) {
-        let newEstablishmentArray = [];
 
-        if (establishmentFilter === "All") {
-            newEstablishmentArray = allEstablishment;
-        } else {
-            allEstablishment.map( (element) => {
-                if(parseFloat(element.rating) >= 4) {
-                    newEstablishmentArray.push(element);
-                };
-            } )
+        setCategory(newCategories);
+    };
 
-            newEstablishmentArray.sort( (a, b) => establishmentFilter == "High-Asc" ? b.rating - a.rating : a.rating - b.rating);
-        }
+    function handleIngredientChange(event) {
+        console.log(event.target.value);
+        let newIngredients = event.target.value;
+        newIngredients = newIngredients.split(',');
 
-        setEstablishment(newEstablishmentArray);
-        setIsOpen(false);
+        setIngredients(newIngredients);
     }
 
-    function handleCategoryChange(option) {
-        
-        let inArrayflag = false;
-        for(let i=0; i<category.length; i++) {
-            if(category[i] == option) {
-                category.splice(i, i);
-                inArrayflag = true;
-                break;
-            }
-        }
-
-        if(!inArrayflag) category.push(option);
-
-        setCategory(category);
-        setCategoryIsOpen(false);
-    }
-
-    function FoodUpdateDropdown({data, dropdownLabel, toggleDropdown, handleDropdownChange}) {
-        return(
-        <div className="dropdown">
-            <button onClick={toggleDropdown}>{dropdownLabel}</button>
-            {isOpen && (
-            <ul className="dropdown-menu">
-                {data.map((option) => (
-                <li key={`${dropdownLabel}_${option}`} onClick={() => handleDropdownChange(option)}>
-                    {option}
-                </li>
-                ))}
-            </ul>
-            )}
-        </div>
-        )
+    function handleOnChange(event, setFunction) {
+        setFunction(event.target.value);
     }
 
     return(
-    <form onSubmit={(e) => handleOnSubmit(e)}>
+    <div className='update-form-body'>
+        <form onSubmit={(e) => handleOnSubmit(e)}>
         <label> Food Name:
             <input type="text" onChange={(e) => handleOnChange(e, setFoodName)}></input>
         </label>
         <label> Price:
-            <input type="number" onChange={(e) => handleOnChange(e, setPrice)}></input>
+            <input type="number" onChange={(e) => handleOnChange(e, setPrice)} step={0.25}></input>
         </label>
         <label> Ingredients:
-            <input type="text" onChange={(e) => handleOnChange(e, setIngredients)}></input>
+            <input type="text" onChange={(e) => handleIngredientChange(e)} placeholder='Ingredient 1, Ingredient 2, Ingredient 3, etc.'></input>
         </label>
         <label> Category:
-            <FoodUpdateDropdown data={CATEGORY_OPTIONS} dropdownLabel={"Select Category"} toggleDropdown={toggleCategoryDropdown} handleDropdownChange={handleCategoryChange}/>
+            <input type="text" onChange={(e) => handleCategoryChange(e)} placeholder='Category 1, Category 2, Category 3, etc.'></input>
         </label>
         <button type="submit">Search</button>
     </form>
+    </div>
     )
 }
 
 function UpdateTable({data, renderTable}) {
-    let headers = ['ID', "Establishment ID", "Food Name", "Price", "Ingredients", "Category"];
+    let headers = ['ID', "Establishment ID", "Food Name", "Price", "Ingredients", "Category", "Update", "Delete"];
 
 
     const [open, setModal] = React.useState(false);
@@ -151,9 +113,7 @@ function UpdateTable({data, renderTable}) {
                 `http://${SERVER}/api/delete-food`,
                 request_body
             )
-
-            console.log(response);
-
+            
             if (response.data.success) {
                 alert("Successfully deleted food.");
                 renderTable();
@@ -181,13 +141,13 @@ function UpdateTable({data, renderTable}) {
                     <td>{item.establishment_id}</td>
                     <td>{item.food_name}</td>
                     <td>{item.price}</td>
-                    <td>{item.ingredients}</td>
+                    <td>{(item.ingredients).join(", ")}</td>
                     <td>{item.category}</td>
                     <td>
                     <button type="button" onClick={() => {toggleModal(item.food_id)}}>
-                        Update Establishment
+                        Update Food Details
                     </button>
-                    <MdDelete onClick={ async () => { await handleDelete(item.establishment_id) } }/>
+                    <MdDelete onClick={ async () => { await handleDelete(item.food_id) } }/>
                     </td>
                 </tr>
             })}
