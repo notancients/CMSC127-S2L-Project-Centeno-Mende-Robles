@@ -2,18 +2,18 @@ import { POOL, KEY } from "../server/pool.js";
 
 const ENCRYPTION_KEY = `${KEY}`;
 
-async function createUser({first_name, last_name, username, user_password}) {
+async function createUser({ first_name, last_name, username, user_password }) {
     console.log("Creating a user.");
 
-    
+
     try {
         // const HASH_QUERY = `AES_ENCRYPT(?, '${KEY}')`
         // const HASHED_PASSWORD = await POOL.query(`SELECT CONCAT(AES_ENCRYPT(?, '${ENCRYPTION_KEY}'))`, [user_password]);
-        
+
         const existing_user = await POOL.query(
             "SELECT COUNT(*) AS count FROM USER WHERE username=?",
             [username]
-        ); 
+        );
 
         console.log(existing_user);
 
@@ -35,7 +35,7 @@ async function createUser({first_name, last_name, username, user_password}) {
         );
 
         return {
-            "success":true,
+            "success": true,
             "data": created_user,
             "message": "A user has been successfully created."
         }
@@ -51,18 +51,18 @@ async function createUser({first_name, last_name, username, user_password}) {
 }
 
 
-async function login({username, user_password}) {
+async function login({ username, user_password }) {
     console.log(`${username} is logging in.`);
 
     try {
         //////////////////////////////////////////////////////////////////////
         // check if the user exists                                         //
         //////////////////////////////////////////////////////////////////////
-        
+
         const existing_user = await POOL.query(
             "SELECT COUNT(*) AS count FROM USER WHERE username=?",
             [username]
-        ); 
+        );
 
         const existing_count = existing_user[0][0].count;
         if (existing_count == 0) {
@@ -76,7 +76,7 @@ async function login({username, user_password}) {
         //////////////////////////////////////////////////////////////////////
         // verify the password                                              //
         //////////////////////////////////////////////////////////////////////
-        
+
         const LOGIN_QUERY = "SELECT user_password FROM USER WHERE username=?";
         const login_query_result = await POOL.query(
             LOGIN_QUERY,
@@ -118,7 +118,7 @@ async function login({username, user_password}) {
                 "message": `${username} has succesfully logged in.`
             }
         }
-        
+
     } catch (err) {
 
         console.log(["There was an error:", err]);

@@ -3,18 +3,17 @@ import React, { useEffect, useState } from 'react';
 import ENV from '../../env';
 import { useLocation, useParams } from 'react-router-dom';
 import Modal from '../components/Modal';
-import { MdDelete }from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 let SERVER = ENV.SERVER;
 let HEADER = ENV.HEADER;
 let user_id = sessionStorage.getItem("user_id");
 
-
-function UpdateForm({toggleModal, renderTable, targetId}) {
+function UpdateForm({ toggleModal, renderTable, targetId }) {
     const [establishmentName, setEstablishmentName] = useState("");
-    const [establishmentLocation, setEestablishmentLocation] = useState("");
+    const [establishmentLocation, setEstablishmentLocation] = useState("");
     const [operatingHours, setOperatingHours] = useState("");
-    
+
 
     async function handleOnSubmit(event) {
         event.preventDefault();
@@ -35,10 +34,10 @@ function UpdateForm({toggleModal, renderTable, targetId}) {
                 request_body,
                 HEADER
             )
-            
-            
 
-            if(response.data.success) {
+
+
+            if (response.data.success) {
                 renderTable();
                 toggleModal();
                 alert("Succesfully updated establishment");
@@ -52,23 +51,23 @@ function UpdateForm({toggleModal, renderTable, targetId}) {
         setFunction(event.target.value);
     }
 
-    return(
-    <form onSubmit={(e) => handleOnSubmit(e)}>
-        <label> Establishment Name:
-            <input type="text" onChange={(e) => handleOnChange(e, setEstablishmentName)}></input>
-        </label>
-        <label> Establishment Location:
-            <input type="text" onChange={(e) => handleOnChange(e, setEestablishmentLocation)}></input>
-        </label>
-        <label> Operating Hours:
-            <input type="text" onChange={(e) => handleOnChange(e, setOperatingHours)}></input>
-        </label>
-        <button type="submit">Search</button>
-    </form>
+    return (
+        <form onSubmit={(e) => handleOnSubmit(e)}>
+            <label> Establishment Name:
+                <input type="text" onChange={(e) => handleOnChange(e, setEstablishmentName)}></input>
+            </label>
+            <label> Establishment Location:
+                <input type="text" onChange={(e) => handleOnChange(e, setEstablishmentLocation)}></input>
+            </label>
+            <label> Operating Hours:
+                <input type="text" onChange={(e) => handleOnChange(e, setOperatingHours)}></input>
+            </label>
+            <button type="submit">Search</button>
+        </form>
     )
 }
 
-function UpdateTable({data, renderTable}) {
+function UpdateTable({ data, renderTable }) {
     let headers = ['ID', 'Name', 'Location', 'Hours', 'Update', 'Delete'];
 
 
@@ -158,17 +157,17 @@ function UpdateEstablishment() {
         }
     }
 
-    useEffect( () => {
+    useEffect(() => {
         console.log("Fetching establishments data.");
 
         fetchEstablishments();
     }, []);
 
-    return(
-    <div className='container'>
-    
-    <UpdateTable data={establishment} renderTable={() => {fetchEstablishments()}}/>
-    </div>
+    return (
+        <div className='container'>
+
+            <UpdateTable data={establishment} renderTable={() => { fetchEstablishments() }} />
+        </div>
     )
 }
 
