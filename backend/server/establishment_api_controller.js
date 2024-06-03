@@ -5,7 +5,8 @@ import {
     deleteEstablishment,
     viewAllEstablishment,
     viewHighlyRatedEstablishment,
-    getEstablishmentById
+    getEstablishmentById,
+    getEstablishmentByUserId
 } from "../establishment/establishment_controller.js";
 
 
@@ -40,7 +41,6 @@ async function searchEstablishmentAPI(req, res) {
 
 async function updateEstablishmentAPI(req, res) {
     console.log("Create establishment API has been called.");
-
     const updateEstablishment_result = await updateEstablishment(req.body);
 
     if(updateEstablishment_result.success) {
@@ -101,6 +101,18 @@ async function getEstablishmentByIdAPI(req, res) {
     }
 }
 
+async function getEstablishmentByUserIdAPI(req, res) {
+    console.log("Get establishment by user id API has been called.");
+
+    const getEstablishmentByUserId_result = await getEstablishmentByUserId(req.query);
+
+    if(getEstablishmentByUserId_result.success) {
+        res.status(200).json(getEstablishmentByUserId_result);
+    } else {
+        res.status(500).json(getEstablishmentByUserId_result);
+    }
+}
+
 export {
     createEstablishmentAPI,
     searchEstablishmentAPI,
@@ -108,5 +120,6 @@ export {
     deleteEstablishmentAPI,
     viewAllEstablishmentAPI,
     viewHighlyRatedEstablishmentAPI,
-    getEstablishmentByIdAPI
+    getEstablishmentByIdAPI,
+    getEstablishmentByUserIdAPI
 }

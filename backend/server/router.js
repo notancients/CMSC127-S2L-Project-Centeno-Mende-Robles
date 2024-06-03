@@ -8,7 +8,8 @@ import {
     searchEstablishmentAPI,
     updateEstablishmentAPI,
     viewAllEstablishmentAPI,
-    viewHighlyRatedEstablishmentAPI
+    viewHighlyRatedEstablishmentAPI,
+    getEstablishmentByUserIdAPI
 } from "./establishment_api_controller.js"
 
 import {
@@ -71,6 +72,7 @@ router.delete("/api/delete-establishment", deleteEstablishmentAPI);
 router.get("/api/view-all-establishment", viewAllEstablishmentAPI);
 router.get("/api/get-highly-rated-establishment", viewHighlyRatedEstablishmentAPI)
 router.get("/api/get-establishment-by-id", getEstablishmentByIdAPI);
+router.get("/api/get-establishment-by-user-id", getEstablishmentByUserIdAPI);
 
 // FOOD API
 router.post("/api/create-food", createFoodAPI);
