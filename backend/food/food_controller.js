@@ -590,14 +590,28 @@ async function getFoodByUserId({user_id}) {
     console.log("Getting food by user id.");
 
     try {
-        const USER_ID_QUERY = `SELECT * FROM FOOD WHERE user_id=?`;
+        const ESTABLISHMENTS_BY_USER = (await POOL.query(
+            `SELECT establishment_id FROM ESTABLISHMENT WHERE established_by=?`,
+            [user_id]
+        ))[0];
+        
+        let qn_mark_placeholder = [...ESTABLISHMENTS_BY_USER].map(() => '?').join(', '); // create the appropriate amount of qn mark place holerds
+    
+        let match_array = ESTABLISHMENTS_BY_USER.map((e) => e.establishment_id);
+
+        ////////////////////////////////////////////////////////////////////////
+        // End of parsing establishments by user                              //
+        ////////////////////////////////////////////////////////////////////////
+
+
+        const USER_ID_QUERY = `SELECT * FROM FOOD WHERE establishment_id IN (${qn_mark_placeholder})`;
 
         const userId_result = await POOL.query(
             USER_ID_QUERY,
-            [user_id]
+            [...match_array]
         );
 
-        let completeFoodDetails = price_category[0];
+        let completeFoodDetails = userId_result[0];
 
         for (let i = 0; i<completeFoodDetails.length; i++) {
             let food_id = completeFoodDetails[i].food_id;
@@ -629,5 +643,6 @@ export {
     getFoodByPriceRangeAndCategory,
     editFood,
     deleteFood,
-    getFoodByCategory
+    getFoodByCategory,
+    getFoodByUserId
 }
