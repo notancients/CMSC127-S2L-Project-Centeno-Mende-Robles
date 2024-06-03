@@ -27,7 +27,7 @@ function EstablishmentReview({ data }) {
 
     useEffect(() => {
         console.log("Fetching establishments data.");
-        const fetchReviews = async () => {
+        const fetchEstablishmentData = async () => {
             try {
                 const response = await axios.get(
                     `http://${SERVER}/api/view-reviews?target_id=${parseInt(establishment_id)}&review_type=1`,
@@ -40,7 +40,7 @@ function EstablishmentReview({ data }) {
             }
         }
 
-        fetchReviews();
+        fetchEstablishmentData();
     }, []);
 
     const toggleDropdown = () => setIsOpen(!isOpen);
