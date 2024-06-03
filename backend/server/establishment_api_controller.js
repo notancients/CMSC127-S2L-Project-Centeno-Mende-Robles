@@ -54,6 +54,8 @@ async function updateEstablishmentAPI(req, res) {
 async function deleteEstablishmentAPI(req, res) {
     console.log("Create establishment API has been called.");
 
+    console.log(req.body);
+
     const deleteEstablishment_result = await deleteEstablishment(req.body);
 
     if(deleteEstablishment_result .success) {

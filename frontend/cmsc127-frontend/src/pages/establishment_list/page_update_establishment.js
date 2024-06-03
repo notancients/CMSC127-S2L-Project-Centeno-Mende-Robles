@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import ENV from '../../env';
 import { useLocation, useParams } from 'react-router-dom';
 import Modal from '../components/Modal';
+import { MdDelete }from "react-icons/md";
 
 let SERVER = ENV.SERVER;
 let HEADER = ENV.HEADER;
 let user_id = sessionStorage.getItem("user_id");
 
-let headers = ['ID', 'Name', 'Location', 'Hours', 'Food', 'Reviews'];
 
 function UpdateForm({toggleModal, renderTable, targetId}) {
     const [establishmentName, setEstablishmentName] = useState("");
@@ -69,6 +69,9 @@ function UpdateForm({toggleModal, renderTable, targetId}) {
 }
 
 function UpdateTable({data, renderTable}) {
+    let headers = ['ID', 'Name', 'Location', 'Hours', 'Update', 'Delete'];
+
+
     const [open, setModal] = React.useState(false);
     const [targetId, setTargetId] = useState(null);
 
@@ -77,6 +80,29 @@ function UpdateTable({data, renderTable}) {
         setModal(!open);
     }
 
+    async function handleDelete(establishment_id) {
+        console.log(establishment_id);
+        try {
+            let request_body = {
+                "establishment_id": establishment_id
+            };
+
+            let response = await axios.post(
+                `http://${SERVER}/api/delete-establishment`,
+                request_body
+            )
+
+            console.log(response);
+
+            if (response.data.success) {
+                alert("Successfully deleted establishment");
+                renderTable();
+            }
+
+        } catch (err) {
+            console.log(["There was an error", err]);
+        }
+    }
 
     return(
     <>
@@ -99,6 +125,7 @@ function UpdateTable({data, renderTable}) {
                     <button type="button" onClick={() => {toggleModal(item.establishment_id)}}>
                         Click Me to Open Modal
                     </button>
+                    <MdDelete onClick={ async () => { await handleDelete(item.establishment_id) } }/>
                     </td>
                 </tr>
             })}

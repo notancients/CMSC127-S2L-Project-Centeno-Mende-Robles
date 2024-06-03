@@ -26,7 +26,7 @@ function Router() {
       <Route path="/create-establishment" element={<CreateEstablishment />}></Route>
       {/* <Route path="/create-establishment-review/:establishment_id" element={<CreateEstablishmentReview />}></Route> */}
       <Route path="/search-establishment" element={<SearchEstablishment/>}></Route>
-      <Route path="/update-establishment/" element={<UpdateEstablishment/>}></Route>
+      <Route path="/update-establishment" element={<UpdateEstablishment/>}></Route>
     </Routes>
   )
 }

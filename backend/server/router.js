@@ -68,7 +68,7 @@ router.post("/api/login", loginAPI);
 router.post("/api/create-establishment", createEstablishmentAPI);
 router.get("/api/search-establishment", searchEstablishmentAPI);
 router.patch("/api/update-establishment", updateEstablishmentAPI);
-router.delete("/api/delete-establishment", deleteEstablishmentAPI);
+router.post("/api/delete-establishment", deleteEstablishmentAPI);
 router.get("/api/view-all-establishment", viewAllEstablishmentAPI);
 router.get("/api/get-highly-rated-establishment", viewHighlyRatedEstablishmentAPI)
 router.get("/api/get-establishment-by-id", getEstablishmentByIdAPI);
