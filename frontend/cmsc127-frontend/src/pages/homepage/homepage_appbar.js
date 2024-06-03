@@ -21,7 +21,9 @@ function HomePageAppBar() {
     let target_pages = {
         "Create Review" : "/create-review",
         "View All Establishments" : "/view-all-establishments",
-        "Update Establishment": "/update-establishment"
+        "Update Establishment": "/update-establishment",
+        "Update Food Items": "/update-food",
+        "Search": "/search"
     }
 
     return (

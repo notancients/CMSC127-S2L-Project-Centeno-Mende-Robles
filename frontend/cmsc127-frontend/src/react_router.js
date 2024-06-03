@@ -11,6 +11,7 @@ import CreateEstablishment from './pages/establishment_list/page_create_establis
 import SearchEstablishment from './pages/establishment_list/page_search_establishment';
 // import CreateEstablishmentReview from './pages/reviews/create_establishment_review';
 import UpdateEstablishment from './pages/establishment_list/page_update_establishment';
+import UpdateFood from './pages/food/page_update_food';
 
 function Router() {
 
@@ -27,6 +28,8 @@ function Router() {
       {/* <Route path="/create-establishment-review/:establishment_id" element={<CreateEstablishmentReview />}></Route> */}
       <Route path="/search-establishment" element={<SearchEstablishment/>}></Route>
       <Route path="/update-establishment" element={<UpdateEstablishment/>}></Route>
+      <Route path="/update-food" element={<UpdateFood/>}></Route>
+
     </Routes>
   )
 }

@@ -123,7 +123,7 @@ function UpdateTable({data, renderTable}) {
                     <td>{item.operating_hours}</td>
                     <td>
                     <button type="button" onClick={() => {toggleModal(item.establishment_id)}}>
-                        Click Me to Open Modal
+                        Update Establishment
                     </button>
                     <MdDelete onClick={ async () => { await handleDelete(item.establishment_id) } }/>
                     </td>
