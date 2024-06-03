@@ -19,6 +19,11 @@ function EstablishmentReview({ data }) {
     const [allEstablishmentReview, setAllEstablishmentReview] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
 
+    const handleAddReview = () => {
+        navigate(`/create-establishment-review/${establishment_id}`);
+    };
+
+
 
     useEffect(() => {
         console.log("Fetching establishments data.");
@@ -85,6 +90,7 @@ function EstablishmentReview({ data }) {
     return (
         <>
             <div className="container">
+                <button createClass="add-establishment-review" onClick={handleAddReview}>Judge Me</button>
                 <ReviewRangeDropdown />
                 <table>
                     <thead>
