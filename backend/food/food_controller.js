@@ -586,7 +586,40 @@ async function getFoodByPriceRangeAndCategory({establishment_name, min_price, ma
     
 }
 
+async function getFoodByUserId({user_id}) {
+    console.log("Getting food by user id.");
 
+    try {
+        const USER_ID_QUERY = `SELECT * FROM FOOD WHERE user_id=?`;
+
+        const userId_result = await POOL.query(
+            USER_ID_QUERY,
+            [user_id]
+        );
+
+        let completeFoodDetails = price_category[0];
+
+        for (let i = 0; i<completeFoodDetails.length; i++) {
+            let food_id = completeFoodDetails[i].food_id;
+
+            completeFoodDetails[i] = (await getFoodById(food_id))["data"];
+        }
+
+        return {
+            "success": true,
+            "data": completeFoodDetails,
+            "message": `Successfully found food entries for the given user id.`
+        };
+
+    } catch (err) {
+        console.log(["There was an error: ", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error getting food entries for the given user id.`
+        };;
+    }
+}
 
 
 
