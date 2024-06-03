@@ -118,13 +118,12 @@ async function viewAllEstablishment() {
     console.log("Viewing all establishments.");
     
     try {
-        const VIEWALL_QUERY = "SELECT establishment_id, establishment_name, establishment_location, operating_hours, AVG(rating) as rating, created FROM ESTABLISHMENT NATURAL JOIN REVIEW WHERE review_type=1 && target_id=establishment_id GROUP BY establishment_id ORDER BY establishment_id ASC;";
+        const VIEWALL_QUERY = "SELECT * FROM ESTABLISHMENT e LEFT JOIN (SELECT target_id, AVG(rating) FROM REVIEW WHERE review_type=1 GROUP BY target_id) r ON e.establishment_id=r.target_id GROUP BY e.establishment_id;";
         const all_establishments = await POOL.query(
             VIEWALL_QUERY,
             []
         );
         
-
         return {
             "success":true,
             "data": all_establishments,
