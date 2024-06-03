@@ -1,5 +1,4 @@
 import styles from '../../styles/style_landing.css';
-import LandingAppBar from './landing_appbar';
 import axios from 'axios';
 
 import ENV from "../../env.js";
@@ -21,7 +20,6 @@ function LandingPage() {
 
     return (
         <div className="container">
-            <LandingAppBar/>
             <div id='container-body'>
                 <div className="flex main-axis-center">Welcome to Reviews!</div>
                 <div className='flex main-axis-center cross-axis-center'>

@@ -1,5 +1,5 @@
 import { Form, Link } from "react-router-dom"
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -7,6 +7,7 @@ import ENV from '../../env.js';
 let { SERVER, HEADER } = ENV;
 
 function CreateEstablishmentReview() {
+    const navigate = useNavigate();
 
     let user_id = sessionStorage.getItem("user_id");
 
@@ -62,15 +63,20 @@ function CreateEstablishmentReview() {
                 `http://${SERVER}/api/create-review`,
                 request_body
             )
-            console.log("console response: ", response);
+            if (response.data.data) {
+                alert("You have successfully submitted a review.");
+                navigate(-1);
+            };
+
         } catch (err) {
             console.log(["There was an error:", err]);
+            alert("You have already submitted a review.");
         }
 
         // Clear the form after submission (optional)
         setRating(0);
         setReviewText('');
-
+        navigate(-1);
     };
 
     const handleSliderChange = (event) => {
@@ -102,50 +108,52 @@ function CreateEstablishmentReview() {
     }, [rating]);
 
     return (
-        <>
-            <div>
-                <div className="establishment-info-card">
-                    <h1>How would you rate {establishment_info.name}?</h1>
-                    <p>Location: {establishment_info.location}</p>
-                    <p>Operating hours: {establishment_info.operating_hours}</p>
-                </div>
-                <div className="review-container">
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="rating">Rating:</label>
-                        <div className="rating-container">
-                            <input
-                                type="range"
-                                id="rating"
-                                min={1}
-                                max={5}
-                                step={0.1}
-                                value={rating}
-                                onChange={handleSliderChange}
-                                required
-                            />
-                            <input
-                                type="number"
-                                id="rating-input"
-                                min={1}
-                                max={5}
-                                step={0.1}
-                                value={rating.toFixed(1)}
-                                onChange={handleInputChange}
-                            />
-                            <span className="rating-value">{ratingTxt}</span>
-                        </div>
-                        <label htmlFor="reviewText">Review Text:</label>
-                        <textarea
-                            id="reviewText"
-                            value={reviewText}
-                            onChange={(e) => setReviewText(e.target.value)}
+    <>
+    <div className="container">
+        <div>
+            <div className="establishment-info-card">
+                <h1>How would you rate {establishment_info.name}?</h1>
+                <p>Location: {establishment_info.location}</p>
+                <p>Operating hours: {establishment_info.operating_hours}</p>
+            </div>
+            <div className="review-container">
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="rating">Rating:</label>
+                    <div className="rating-container">
+                        <input
+                            type="range"
+                            id="rating"
+                            min={1}
+                            max={5}
+                            step={0.1}
+                            value={rating}
+                            onChange={handleSliderChange}
                             required
                         />
-                        <button type="submit">Submit Review</button>
-                    </form>
-                </div>
+                        <input
+                            type="number"
+                            id="rating-input"
+                            min={1}
+                            max={5}
+                            step={0.1}
+                            value={rating.toFixed(1)}
+                            onChange={handleInputChange}
+                        />
+                        <span className="rating-value">{ratingTxt}</span>
+                    </div>
+                    <label htmlFor="reviewText">Review Text:</label>
+                    <textarea
+                        id="reviewText"
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                        required
+                    />
+                    <button type="submit">Submit Review</button>
+                </form>
             </div>
-        </>
+        </div>
+    </div>
+    </>
     )
 }
 

@@ -1,4 +1,4 @@
-import HomePageAppBar from "./homepage_appbar";
+import HomePageAppBar from "../components/appbar";
 
 
 
@@ -9,7 +9,6 @@ function HomePage() {
     
     return (
     <>
-    <HomePageAppBar/>
     <div className="container">
     </div>
     </>

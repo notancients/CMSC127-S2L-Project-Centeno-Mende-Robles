@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import ENV from "../../env.js";
 import axios, { all } from 'axios';
 import { useTable } from "react-table";
-import HomePageAppBar from "../homepage/homepage_appbar.js";
+import HomePageAppBar from "../components/appbar.js";
 import { Link, useNavigate } from "react-router-dom";
 import EstablishmentTable from "../components/establishment_table.js";
 
@@ -29,6 +29,7 @@ function EstablishmentList() {
                 const response = await axios.get(
                     `http://${SERVER}/api/view-all-establishment`
                 );
+                console.log(response);
                 setAllEstablishment(response.data.data[0]);
                 setEstablishment(response.data.data[0]);
             } catch (err) {
@@ -79,7 +80,6 @@ function EstablishmentList() {
 
     return (
     <>
-    <HomePageAppBar/>
     <div className="container">
         <EstablishmentDropdown/>
         <EstablishmentTable data={establishment}/>

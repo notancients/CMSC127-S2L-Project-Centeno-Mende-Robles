@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import ENV from "../../env.js";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../../react_provider.js";
 
 let SERVER = ENV.SERVER;
 let HEADER = ENV.HEADER;
@@ -9,6 +10,7 @@ let HEADER = ENV.HEADER;
 
 function Login() {
     const navigate = useNavigate();
+    const { isLoggedIn, login, logout } = useContext(LoginContext);
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -43,7 +45,7 @@ function Login() {
                 sessionStorage.setItem("first_name", response_data.data.first_name);
 
                 console.log(sessionStorage.getItem("first_name"));
-                
+                login();
                 navigate("/homepage")
             }
         } catch (err) {
