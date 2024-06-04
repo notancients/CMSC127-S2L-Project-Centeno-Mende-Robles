@@ -12,6 +12,7 @@ function AppBar() {
     const navigate = useNavigate();
     const [showMenu, setShowMenu] = useState(true);
     const { isLoggedIn, login, logout } = useContext(LoginContext);
+    const [renderAppBar, setRenderAppBar] = useState(false);
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
@@ -38,7 +39,7 @@ function AppBar() {
     isLoggedIn && (
         <div className="app-bar">
             <div className='flex row'>
-                <BackButton/>
+                <BackButton renderAppBar={() => {setRenderAppBar(!renderAppBar)}}/>
                 <div className="app-bar-title">Welcome {first_name}!</div>
             </div>
             <nav className={`app-bar-nav ${showMenu ? 'active' : ''}`}>
@@ -53,7 +54,10 @@ function AppBar() {
     }
     {
     !isLoggedIn && (
-        <LandingAppBar/>
+        <div className='app-bar'>
+            <BackButton renderAppBar={() => {setRenderAppBar(!renderAppBar)}}/>
+            Review App
+        </div>
     )
     }
     </>
