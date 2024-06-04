@@ -13,6 +13,8 @@ function FoodByEstablishment() {
     // Get a specific query parameter
     const {establishment_id} = useParams();
 
+    console.log(establishment_id);
+    
     let [allFood, setAllFood] = useState([]); // this is used to store the complete array of food served by the restaurant
     let [food, setFood] = useState([]);
 

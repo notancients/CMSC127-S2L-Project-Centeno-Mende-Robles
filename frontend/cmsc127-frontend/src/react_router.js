@@ -14,6 +14,7 @@ import CreateFoodReview from './pages/reviews/create_food_review';
 import UpdateEstablishment from './pages/establishment_list/page_update_establishment';
 import UpdateFood from './pages/food/page_update_food';
 import YourReviews from './pages/reviews/page_your_reviews';
+import Create from './pages/create/page_create';
 
 function Router() {
 
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/update-establishment" element={<UpdateEstablishment />}></Route>
       <Route path="/update-food" element={<UpdateFood/>}></Route>
       <Route path="/your-reviews" element={<YourReviews/>}></Route>
+      <Route path="/create" element={<Create/>}></Route>
     </Routes >
   )
 }

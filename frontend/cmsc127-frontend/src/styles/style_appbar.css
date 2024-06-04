@@ -1,24 +1,4 @@
-.container {
-    background-color: green;  /* Set your preferred color */
-    min-height: 100vh;  /* Ensure the entire viewport height is covered */
-  }
 
-#container-body {
-  width: 100%;
-  height: 100%;
-}
-
-.flex {
-  display: flex;
-}
-
-.main-axis-center {
-  justify-content: center;
-}
-
-.row-axis-center {
-  align-items: center;
-}
 
 
 .app-bar {
@@ -37,7 +17,23 @@
 
 .app-bar-nav {
   display: flex;
+  flex-grow: 2;
   list-style: none;
+  padding: 10;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.app-bar-nav.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.app-bar-nav a {
+  text-decoration: none;
+  color: inherit;
+  margin-right: 20px;
 }
 
 .menu-button {

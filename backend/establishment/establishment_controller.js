@@ -10,6 +10,8 @@ async function createEstablishment({establishment_name, establishment_location, 
             [establishment_name, establishment_location, operating_hours, established_by]
         );
 
+        console.log(created_establishment);
+
         return {
             "success":true,
             "data": created_establishment,

@@ -59,13 +59,15 @@ function Login() {
     }
 
     return (
-        <div className="container flex column main-axis-center cross-axis-center">
+        <div className="container flex column col-center row center">
+            <div className="login-card column col-center row center">
             <form onSubmit={handleSubmit}>
                 <label> Username: <input type="text" onChange={(e)=> inputChange(e, setUsername)}></input> </label>
                 <label> Password: <input type="password" onChange={(e)=> inputChange(e, setPassword)}></input> </label>
 
                 <button type="submit">Submit</button>
             </form>
+            </div>
         </div>
     )
 }

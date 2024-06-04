@@ -1,4 +1,4 @@
-import styles from '../../styles/style_landing.css';
+import styles from '../../styles/style.css';
 import axios from 'axios';
 
 import ENV from "../../env.js";
