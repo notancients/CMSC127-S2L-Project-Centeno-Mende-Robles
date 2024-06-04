@@ -59,3 +59,6 @@ The name of the database being used for the program. Set this to *reviewapp*.
 The salt/key used for encryption. Set this to *key*.
 
 `HASH_KEY`
+
+The port is the 'address' of your server for your localhost. Set this to *3001*.
+`PORT`
