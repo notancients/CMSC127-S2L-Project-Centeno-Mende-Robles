@@ -3,7 +3,8 @@ import {
     updateReview,
     deleteReview,
     viewReviews,
-    viewReviewsByDate
+    viewReviewsByDate,
+    getReviewByUserID
 } from "../review/review_controller.js";
 
 async function createReviewAPI(req, res) {
@@ -67,6 +68,18 @@ async function viewReviewsByDateAPI(req, res) {
     }
 }
 
+async function getReviewByUserIdAPI(req, res) {
+    console.log("View review by user id API has been called.");
+
+    const getReviewByUserID_result = await getReviewByUserID(req.query);
+    
+    if(getReviewByUserID_result.success) {
+        res.status(200).json(getReviewByUserID_result);
+    } else {
+        res.status(500).json(getReviewByUserID_result);
+    }
+}
+
 
 
 export {
@@ -74,5 +87,6 @@ export {
     updateReviewAPI,
     deleteReviewAPI,
     viewReviewsAPI,
-    viewReviewsByDateAPI
+    viewReviewsByDateAPI,
+    getReviewByUserIdAPI
 }

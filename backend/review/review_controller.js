@@ -181,10 +181,41 @@ async function viewReviewsByDate({ review_type, target_id }) {
     }
 }
 
+async function getReviewByUserID({user_id}) {
+    console.log("Getting reviews by user id.");
+
+    try {
+        const VIEW_REVIEW_BY_USER_ID_QUERY = "SELECT * FROM REVIEW WHERE user_id=?";
+
+        const viewReviewByUserId_result = (await POOL.query(
+            VIEW_REVIEW_BY_USER_ID_QUERY,
+            [user_id]
+        ))[0];
+
+
+        return {
+            "success": true,
+            "data": viewReviewByUserId_result,
+            "message": "Successfully retrieved all reviews for the given user id."
+        }
+
+    } catch (err) {
+
+        console.log(["There was an error: ", err]);
+        return {
+            "success": false,
+            "data": err,
+            "message": `There was an error retrieving the reviews for the given user id.`
+        }
+
+    }
+}
+
 export {
     createReview,
     updateReview,
     deleteReview,
     viewReviews,
-    viewReviewsByDate
+    viewReviewsByDate,
+    getReviewByUserID
 }

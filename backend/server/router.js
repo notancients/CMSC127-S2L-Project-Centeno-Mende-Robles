@@ -40,7 +40,8 @@ import {
     deleteReviewAPI,
     updateReviewAPI,
     viewReviewsAPI,
-    viewReviewsByDateAPI
+    viewReviewsByDateAPI,
+    getReviewByUserIdAPI
 } from "./review_api_controller.js";
 
 const router = express.Router();
@@ -92,5 +93,6 @@ router.patch("/api/update-review", updateReviewAPI);
 router.delete("/api/delete-review", deleteReviewAPI);
 router.get("/api/view-reviews", viewReviewsAPI);
 router.get("/api/view-reviews-by-date", viewReviewsByDateAPI);
+router.get("/api/get-review-by-user-id", getReviewByUserIdAPI);
 
 export default router;

@@ -26,9 +26,9 @@ function AppBar() {
     let target_pages = {
         "Create Review" : "/create-review",
         "View All Establishments" : "/view-all-establishments",
-        "Update Establishment": "/update-establishment",
-        "Update Food Items": "/update-food",
-        "Search": "/search"
+        "Your Establishment": "/update-establishment",
+        "Your Food Items": "/update-food",
+        "Your Reviews": "/your-reviews"
     }
     
 
