@@ -18,6 +18,7 @@ function YourReviews() {
                 `http://${SERVER}/api/get-review-by-user-id?user_id=${user_id}`,
             );
 
+            console.log(response);
             let fetchFoodReview = [];
             let fetchEstablishmentReview = [];
             let data = response.data;
@@ -46,11 +47,11 @@ function YourReviews() {
         <div className="flex row">
             <div className="review-table flex column col-center">
                 <div>Food Reviews</div>
-                <ReviewTable data={foodReview}/>
+                <ReviewTable data={foodReview} renderTable={fetchReviews}/>
             </div>
             <div className="review-table flex column col-center">
                 <div>Establishment Review</div>
-                <ReviewTable data={establishmentReview}/>
+                <ReviewTable data={establishmentReview} renderTable={fetchReviews}/>
             </div>
         </div>
     </div>

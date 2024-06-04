@@ -90,7 +90,7 @@ router.get("/api/get-food-by-user-id", getFoodByUserIdAPI);
 // REVIEW API
 router.post("/api/create-review", createReviewAPI);
 router.patch("/api/update-review", updateReviewAPI);
-router.delete("/api/delete-review", deleteReviewAPI);
+router.post("/api/delete-review", deleteReviewAPI);
 router.get("/api/view-reviews", viewReviewsAPI);
 router.get("/api/view-reviews-by-date", viewReviewsByDateAPI);
 router.get("/api/get-review-by-user-id", getReviewByUserIdAPI);
